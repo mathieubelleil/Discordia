@@ -16,7 +16,11 @@ var connection = mysql.createConnection({
 bot.login("N/jQwODQ1NjQ3Mzg1NDYwNzM3.Xb_wBA.GcnKTNo_H9yAdwvA6ic8o4_ANhM");
 
 bot.on('ready', function () {
+<<<<<<< HEAD
   console.log("Je suis connecté !");
+=======
+  console.log("Je suis là !");
+>>>>>>> 48219fbdb5460443e0a418fbb691136fe4274188
   Classes.parse(bot);
   Races.parse(bot);
 })
