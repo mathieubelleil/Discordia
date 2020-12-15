@@ -1,2 +1,1 @@
-bot
-# bot12
+Ceci est le projet du Bot Discord "Discordia" qui sera un jeu de rôle.
