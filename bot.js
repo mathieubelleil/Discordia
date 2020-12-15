@@ -13,7 +13,7 @@ var connection = mysql.createConnection({
   database : 'jimg_jdr'
 });
 
-bot.login("N/jQwODQ1NjQ3Mzg1NDYwNzM3.Xb_wBA.GcnKTNo_H9yAdwvA6ic8o4_ANhM");
+bot.login("NjQwODQ1NjQ3Mzg1NDYwNzM3.Xb_wBA.e3dBbkS6cWv0rH2rqMtpIOgjBdM");
 
 bot.on('ready', function () {
   console.log("Coucou ! Je suis présent !");
