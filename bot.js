@@ -1,7 +1,7 @@
 const Discord = require('discord.js');
 const Classes = require('./command/Class.js');
 const Races = require('./command/Races.js');
-const CONFIG = require('config.json');
+var CONFIG = require('config.json');
 <<<<<<< HEAD
 //const Canvas = require('canvas');
 =======
@@ -26,7 +26,7 @@ bot.on('ready', function () {
 =======
 //bot.login("N/jQwODQ1NjQ3Mzg1NDYwNzM3.Xb_wBA.GcnKTNo_H9yAdwvA6ic8o4_ANhM");
 
-bot.login("NjQwODQ1NjQ3Mzg1NDYwNzM3.Xb_wBA.e3dBbkS6cWv0rH2rqMtpIOgjBdM");
+bot.login(CONFIG.botKey);
 
 bot.on('ready', function () {
   console.log("Coucou !! Je suis connecté !");
