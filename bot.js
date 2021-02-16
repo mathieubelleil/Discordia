@@ -1,6 +1,7 @@
 const Discord = require('discord.js');
 const Classes = require('./command/Class.js');
 const Races = require('./command/Races.js');
+const CONFIG = require('config.json');
 <<<<<<< HEAD
 //const Canvas = require('canvas');
 =======
@@ -11,14 +12,14 @@ const prefix = "!";
 
 var mysql = require('mysql');
 var connection = mysql.createConnection({
-  host     : 'mysql-jimg.alwaysdata.net',
-  user     : 'jimg_jdr',
-  password : 'Jdr123456,',
-  database : 'jimg_jdr'
+  host     : CONFIG.dbHost,
+  user     : CONFIG.dbUser,
+  password : CONFIG.dbPass,
+  database : CONFIG.dbName
 });
 
 <<<<<<< HEAD
-bot.login("NjQwODQ1NjQ3Mzg1NDYwNzM3.Xb_wBA.e3dBbkS6cWv0rH2rqMtpIOgjBdM");
+bot.login(CONFIG.botKey);
 
 bot.on('ready', function () {
   console.log("Coucou ! Je suis connecté !");
@@ -95,7 +96,7 @@ bot.on('message', async message => {
     message.delete();
 <<<<<<< HEAD
 =======
-    
+
 >>>>>>> addc6c1 (fix)
     if(args[0] != null){
       const nb = getRandomInteger(args[0], args[1]+1);
@@ -132,10 +133,10 @@ bot.on('message', async message => {
       ctx.strokeRect(0, 0, canvas.width, canvas.height);
 
 =======
-    
+
       ctx.strokeStyle = '#74037b';
       ctx.strokeRect(0, 0, canvas.width, canvas.height);
-    
+
 >>>>>>> addc6c1 (fix)
       // Assign the decided font to the canvas
       ctx.font = '60px sans-serif';
@@ -144,7 +145,7 @@ bot.on('message', async message => {
 <<<<<<< HEAD
 
 =======
-    
+
 >>>>>>> addc6c1 (fix)
       ctx.beginPath();
       ctx.arc(125, 125, 100, 0, Math.PI * 2, true);
@@ -158,12 +159,12 @@ bot.on('message', async message => {
       const attachment = new Discord.MessageAttachment(canvas.toBuffer(), 'welcome-image.png');
 
 =======
-    
+
       const logo = await Canvas.loadImage('./images/logo.png');
       ctx.drawImage(logo, 25, 25, 200, 200);
-    
+
       const attachment = new Discord.MessageAttachment(canvas.toBuffer(), 'welcome-image.png');
-    
+
 >>>>>>> addc6c1 (fix)
       message.channel.send(attachment);
 	}
