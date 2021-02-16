@@ -1,7 +1,7 @@
 const Discord = require('discord.js');
 const Classes = require('./command/Class.js');
 const Races = require('./command/Races.js');
-const Canvas = require('canvas');
+//const Canvas = require('canvas');
 const bot = new Discord.Client();
 const prefix = "!";
 
@@ -13,10 +13,10 @@ var connection = mysql.createConnection({
   database : 'jimg_jdr'
 });
 
-bot.login("N/jQwODQ1NjQ3Mzg1NDYwNzM3.Xb_wBA.GcnKTNo_H9yAdwvA6ic8o4_ANhM");
+bot.login("NjQwODQ1NjQ3Mzg1NDYwNzM3.Xb_wBA.j5mQ2sAr5d4xmPj_KyluOkyHa6Y");
 
 bot.on('ready', function () {
-  console.log("Coucou ! Je suis présent !");
+  console.log("Coucou ! Je suis connecté !");
   Classes.parse(bot);
   Races.parse(bot);
 })
@@ -109,25 +109,25 @@ bot.on('message', async message => {
       const ctx = canvas.getContext('2d');
       const background = await Canvas.loadImage('./images/fond_carte.png');
       ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
-    
+
       ctx.strokeStyle = '#74037b';
       ctx.strokeRect(0, 0, canvas.width, canvas.height);
-    
+
       // Assign the decided font to the canvas
       ctx.font = '60px sans-serif';
       ctx.fillStyle = '#ffffff';
       ctx.fillText(message.member.displayName, canvas.width / 2, canvas.height / 1.7);
-    
+
       ctx.beginPath();
       ctx.arc(125, 125, 100, 0, Math.PI * 2, true);
       ctx.closePath();
       ctx.clip();
-    
+
       const logo = await Canvas.loadImage('./images/logo.png');
       ctx.drawImage(logo, 25, 25, 200, 200);
-    
+
       const attachment = new Discord.MessageAttachment(canvas.toBuffer(), 'welcome-image.png');
-    
+
       message.channel.send(attachment);
 	}
 });
