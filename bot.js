@@ -2,7 +2,7 @@ const Discord = require('discord.js');
 const Classes = require('./command/Class.js');
 const Races = require('./command/Races.js');
 var CONFIG = require('./config.json');
-const Canvas = require('canvas');
+//const Canvas = require('canvas');
 const bot = new Discord.Client();
 const prefix = "!";
 
