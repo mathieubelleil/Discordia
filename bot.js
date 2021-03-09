@@ -2,11 +2,7 @@ const Discord = require('discord.js');
 const Classes = require('./command/Class.js');
 const Races = require('./command/Races.js');
 var CONFIG = require('config.json');
-<<<<<<< HEAD
-//const Canvas = require('canvas');
-=======
 const Canvas = require('canvas');
->>>>>>> addc6c1 (fix)
 const bot = new Discord.Client();
 const prefix = "!";
 
@@ -17,20 +13,10 @@ var connection = mysql.createConnection({
   password : CONFIG.dbPass,
   database : CONFIG.dbName
 });
-
-<<<<<<< HEAD
-bot.login(CONFIG.botKey);
-
-bot.on('ready', function () {
-  console.log("Coucou ! Je suis connecté !");
-=======
-//bot.login("N/jQwODQ1NjQ3Mzg1NDYwNzM3.Xb_wBA.GcnKTNo_H9yAdwvA6ic8o4_ANhM");
-
 bot.login(CONFIG.botKey);
 
 bot.on('ready', function () {
   console.log("Coucou !! Je suis connecté !");
->>>>>>> addc6c1 (fix)
   Classes.parse(bot);
   Races.parse(bot);
 })
@@ -94,10 +80,6 @@ bot.on('message', async message => {
   const command = args.shift().toLowerCase();
   if(command === 'dice') {
     message.delete();
-<<<<<<< HEAD
-=======
-
->>>>>>> addc6c1 (fix)
     if(args[0] != null){
       const nb = getRandomInteger(args[0], args[1]+1);
       var canvas = Canvas.createCanvas(50, 50);
@@ -127,45 +109,24 @@ bot.on('message', async message => {
       const ctx = canvas.getContext('2d');
       const background = await Canvas.loadImage('./images/fond_carte.png');
       ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
-<<<<<<< HEAD
 
       ctx.strokeStyle = '#74037b';
       ctx.strokeRect(0, 0, canvas.width, canvas.height);
 
-=======
-
-      ctx.strokeStyle = '#74037b';
-      ctx.strokeRect(0, 0, canvas.width, canvas.height);
-
->>>>>>> addc6c1 (fix)
       // Assign the decided font to the canvas
       ctx.font = '60px sans-serif';
       ctx.fillStyle = '#ffffff';
       ctx.fillText(message.member.displayName, canvas.width / 2, canvas.height / 1.7);
-<<<<<<< HEAD
-
-=======
-
->>>>>>> addc6c1 (fix)
       ctx.beginPath();
       ctx.arc(125, 125, 100, 0, Math.PI * 2, true);
       ctx.closePath();
       ctx.clip();
-<<<<<<< HEAD
 
       const logo = await Canvas.loadImage('./images/logo.png');
       ctx.drawImage(logo, 25, 25, 200, 200);
 
       const attachment = new Discord.MessageAttachment(canvas.toBuffer(), 'welcome-image.png');
 
-=======
-
-      const logo = await Canvas.loadImage('./images/logo.png');
-      ctx.drawImage(logo, 25, 25, 200, 200);
-
-      const attachment = new Discord.MessageAttachment(canvas.toBuffer(), 'welcome-image.png');
-
->>>>>>> addc6c1 (fix)
       message.channel.send(attachment);
 	}
 });
@@ -179,8 +140,4 @@ function getIDFromRoleID(table, roleid) {
   connection.query('SELECT * FROM '+table+' WHERE roleid="'+roleid+'"', function (error, results, fields) {
       return results[0].id;
     });
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> addc6c1 (fix)
