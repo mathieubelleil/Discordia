@@ -2,7 +2,7 @@ const Discord = require('discord.js');
 const Classes = require('./command/Class.js');
 const Races = require('./command/Races.js');
 var CONFIG = require('./other/config.json');
-//const Canvas = require('canvas');
+const Canvas = require('canvas');
 const bot = new Discord.Client();
 const prefix = "!";
 
@@ -16,7 +16,7 @@ var connection = mysql.createConnection({
 bot.login(CONFIG.botKey);
 
 bot.on('ready', function () {
-  console.log("Coucou !! Je suis connecté !");
+  console.log("Je suis connecté !");
   Classes.parse(bot);
   Races.parse(bot);
 })
@@ -76,7 +76,7 @@ bot.on('messageReactionRemove', (reaction, user) => {
 });
 
 bot.on('message', async message => {
-  const args = message.content.slice(prefix.length).trim().split(/ +/g);
+  const args = message.content.slice(prefix.length).trim().split(' ');
   const command = args.shift().toLowerCase();
   if(command === 'dice') {
     message.delete();

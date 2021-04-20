@@ -20,12 +20,11 @@ module.exports = class Class extends Command {
         if (error) throw error;
             for(var i = 0; i < results.length;i++){
                 if(results[i].enable == 1){
-                    var emoji_homme = client.emojis.cache.find(emoji => emoji.name == results[i].react+"_Homme");
-                    var emoji_femme = client.emojis.cache.find(emoji => emoji.name == results[i].react+"_Femme");
+                    var emoji_homme = client.emojis.cache.find(emoji => emoji.name == results[i].react);
                     
                     const embed = new Discord.MessageEmbed()
                         .setColor(results[i].color)
-                        .setDescription(emoji_homme+" "+emoji_femme+" - **"+results[i].nom+"** ("+results[i].pv+"PV - "+results[i].dg+"DG) - "+results[i].description+"\n\n"+results[i].pouvoir+"\n\n\n");
+                        .setDescription(`${emoji_homme}`+' **'+results[i].nom+"** ("+results[i].pv+"PV - "+results[i].dg+"DG) - "+results[i].description+"\n\n"+results[i].pouvoir+"\n\n\n");
                     channel.send({embed});
                     
                 }

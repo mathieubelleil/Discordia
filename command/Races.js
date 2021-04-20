@@ -25,7 +25,7 @@ module.exports = class Races extends Command {
                     
                     const embed = new Discord.MessageEmbed()
                         .setColor(results[i].color)
-                        .setDescription(emoji_homme+" "+emoji_femme+" - **"+results[i].nom+"** ("+results[i].pv+"PV - "+results[i].dg+"DG) - "+results[i].description+"\n\n"+results[i].capacite+"\n\n\n");
+                        .setDescription(`${emoji_femme}`+" "+`${emoji_homme}`+" - **"+results[i].nom+"** ("+results[i].pv+"PV - "+results[i].dg+"DG) - "+results[i].description+"\n\n"+results[i].capacite+"\n\n\n");
                     channel.send({embed});
                     
                 }
