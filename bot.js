@@ -8,10 +8,10 @@ const prefix = "!";
 
 var mysql = require('mysql');
 var connection = mysql.createConnection({
-  host     : CONFIG.dbHost,
-  user     : CONFIG.dbUser,
-  password : CONFIG.dbPass,
-  database : CONFIG.dbName
+  host     : 'mysql-jimg.alwaysdata.net',
+  user     : 'jimg_jdr',
+  password : 'Jdr123456,',
+  database : 'jimg_jdr'
 });
 bot.login(CONFIG.botKey);
 
