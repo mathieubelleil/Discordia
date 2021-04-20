@@ -135,7 +135,7 @@ bot.on('message', async message => {
             if (error) throw error;
               var monster = results[0];
               
-              return message.reply('Début de combat contre', monster.nom, '.');
+              message.channel.send('Début de combat contre', monster.nom, '.');
             });
     }
 	}
