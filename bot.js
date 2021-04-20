@@ -33,7 +33,7 @@ bot.on('messageReactionAdd', (reaction, user) => {
               member.roles.add(role).catch(err = console.error);
               member.roles.add(role2).catch(err = console.error);
               member.roles.remove(role3).catch(err = console.error);
-              //connection.query('INSERT INTO players (discord_id,class_id,race_id,pv,dg,inv) VALUES ('+member.id+', '+getIDFromRoleID("classes", member.roles.get[1])+', '+getIDFromRoleID("races", member.roles.get[2])+', "1", "1", "1")');
+              connection.query('INSERT INTO players (discord_id,class_id,race_id,pv,dg,inv) VALUES ('+member.id+', '+getIDFromRoleID("classes", member.roles.get[1])+', '+getIDFromRoleID("races", member.roles.get[2])+', "1", "1", "1")');
             });
     }
   }
@@ -114,8 +114,8 @@ bot.on('message', async message => {
       ctx.strokeRect(0, 0, canvas.width, canvas.height);
 
       // Assign the decided font to the canvas
-      ctx.font = '60px sans-serif';
-      ctx.fillStyle = '#ffffff';
+      ctx.font = '40px sans-serif';
+      ctx.fillStyle = '#ff0000';
       ctx.fillText(message.member.displayName, canvas.width / 2, canvas.height / 1.7);
       ctx.beginPath();
       ctx.arc(125, 125, 100, 0, Math.PI * 2, true);
@@ -130,7 +130,14 @@ bot.on('message', async message => {
       message.channel.send(attachment);
 	}
   if(command === 'fight') {
-    return message.reply("test");
+    if(user != bot.user){
+        connection.query('SELECT * FROM monsters ORDER BY RAND() LIMIT 1', function (error, results, fields) {
+            if (error) throw error;
+              var monster = results[0];
+              
+              return message.reply('Début de combat contre', monster.nom, '.');
+            });
+    }
 	}
 });
 function getRandomInteger(min, max) {
