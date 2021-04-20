@@ -130,14 +130,12 @@ bot.on('message', async message => {
       message.channel.send(attachment);
 	}
   if(command === 'fight') {
-    if(user != bot.user){
-        connection.query('SELECT * FROM monsters ORDER BY RAND() LIMIT 1', function (error, results, fields) {
-            if (error) throw error;
-              var monster = results[0];
-              
-              message.channel.send('Début de combat contre', monster.nom, '.');
-            });
-    }
+    connection.query('SELECT * FROM monsters ORDER BY RAND() LIMIT 1', function (error, results, fields) {
+      if (error) throw error;
+        var monster = results[0];
+        
+        message.channel.send('Début de combat contre', monster.nom, '.');
+      });
 	}
 });
 function getRandomInteger(min, max) {
