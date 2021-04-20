@@ -104,7 +104,7 @@ bot.on('message', async message => {
     const attachment = new Discord.MessageAttachment(canvas.toBuffer(), 'dice.png');
     return message.reply(attachment);
   }
-  if(command === 'join') {
+  if(command === 'card') {
       const canvas = Canvas.createCanvas(900, 1157);
       const ctx = canvas.getContext('2d');
       const background = await Canvas.loadImage('./images/fond_carte.png');
@@ -128,6 +128,9 @@ bot.on('message', async message => {
       const attachment = new Discord.MessageAttachment(canvas.toBuffer(), 'welcome-image.png');
 
       message.channel.send(attachment);
+	}
+  if(command === 'fight') {
+    return message.reply("test");
 	}
 });
 function getRandomInteger(min, max) {

@@ -34,10 +34,7 @@ module.exports = class Class extends Command {
                 if (error) throw error;
                     for(var i = 0; i < results.length;i++){
                         if(results[i].enable == 1){
-                            console.log(results[i].react);
                             var emojireact_homme = client.emojis.cache.find(emoji => emoji.name === results[i].react+"");
-                            //msg.react(emojireact_homme.id);
-                            console.log(emojireact_homme);
                             msg.react(emojireact_homme.id);
                         }
                     };
