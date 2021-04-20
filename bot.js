@@ -33,7 +33,7 @@ bot.on('messageReactionAdd', (reaction, user) => {
               member.roles.add(role).catch(err = console.error);
               member.roles.add(role2).catch(err = console.error);
               member.roles.remove(role3).catch(err = console.error);
-              connection.query('INSERT INTO players (discord_id,class_id,race_id,pv,dg,inv) VALUES ('+member.id+', '+getIDFromRoleID("classes", member.roles.get[1])+', '+getIDFromRoleID("races", member.roles.get[2])+', "1", "1", "1")');
+              connection.query('INSERT INTO players (discord_id,class_id,race_id,pv,dg,inv) VALUES ('+member.id+', "1", "1", "1", "1", "1")');
             });
     }
   }
