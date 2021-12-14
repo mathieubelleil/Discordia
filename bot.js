@@ -17,7 +17,7 @@ var connection = mysql.createConnection({
 bot.login(CONFIG.botKey);
 
 bot.on('ready', function () {
-  console.log("Je suis connecté !");
+  console.log("Je suis connecté ma gueule !");
   Classes.parse(bot);
   Races.parse(bot);
 })
