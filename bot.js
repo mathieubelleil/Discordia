@@ -1,3 +1,4 @@
+require('dotenv').config();
 const Discord = require('discord.js');
 const Classes = require('./command/Class.js');
 const Races = require('./command/Races.js');
@@ -8,10 +9,10 @@ const prefix = "!";
 
 var mysql = require('mysql');
 var connection = mysql.createConnection({
-  host     : 'mysql-jimg.alwaysdata.net',
-  user     : 'jimg_jdr',
-  password : 'Jdr123456,',
-  database : 'jimg_jdr'
+  host     : process.env.DB_HOST,
+  user     : process.env.DB_USER,
+  password : process.env.DB_PASSWORD,
+  database : process.env.DB_NAME
 });
 bot.login(CONFIG.botKey);
 
