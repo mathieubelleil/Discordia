@@ -139,7 +139,7 @@ bot.on('message', async message => {
           if (error2) throw error2;
             if(results2[0].on_combat != 1){
               var monster = results[0];
-              message.channel.send('<@!'+message.author.id+'> Début de combat contre '+monster.nom+'.');
+              message.channel.send('<@!'+message.author.id+'> Début de combat super pourri contre '+monster.nom+'.');
               connection.query('UPDATE players SET on_combat="1" WHERE discord_id="'+message.author.id+'"');
             }else{
               message.channel.send('<@!'+message.author.id+'> Impossible, vous êtes déjà en combat.');
