@@ -6,18 +6,12 @@ var CONFIG = require('./other/config.json');
 const Canvas = require('canvas');
 const bot = new Discord.Client();
 const prefix = "!";
+const connection = require('./config.js')
 
-var mysql = require('mysql');
-var connection = mysql.createConnection({
-  host     : process.env.DB_HOST,
-  user     : process.env.DB_USER,
-  password : process.env.DB_PASSWORD,
-  database : process.env.DB_NAME
-});
 bot.login(CONFIG.botKey);
 
 bot.on('ready', function () {
-  console.log("Je suis connecté ma gueule !");
+  console.log("Je suis connecté !");
   Classes.parse(bot);
   Races.parse(bot);
 })
