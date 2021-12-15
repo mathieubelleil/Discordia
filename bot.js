@@ -2,13 +2,12 @@ require('dotenv').config();
 const Discord = require('discord.js');
 const Classes = require('./command/Class.js');
 const Races = require('./command/Races.js');
-var CONFIG = require('./other/config.json');
 const Canvas = require('canvas');
 const bot = new Discord.Client();
 const prefix = "!";
 const {connection} = require('./config.js')
 
-bot.login(CONFIG.botKey);
+bot.login(process.env.BOTKEY);
 
 bot.on('ready', function () {
   console.log("Je suis connecté !");
