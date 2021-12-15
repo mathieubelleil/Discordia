@@ -6,7 +6,9 @@ var CONFIG = require('./other/config.json');
 const Canvas = require('canvas');
 const bot = new Discord.Client();
 const prefix = "!";
-const connection = require('./config.js')
+const {connection} = require('./config.js')
+
+console.log(connection)
 
 bot.login(CONFIG.botKey);
 
