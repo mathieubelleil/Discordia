@@ -1,3 +1,4 @@
+require('dotenv').config();
 const Discord = require('discord.js');
 const Classes = require('./command/Class.js');
 const Races = require('./command/Races.js');
@@ -5,14 +6,8 @@ var CONFIG = require('./other/config.json');
 const Canvas = require('canvas');
 const bot = new Discord.Client();
 const prefix = "!";
+const {connection} = require('./config.js')
 
-var mysql = require('mysql');
-var connection = mysql.createConnection({
-  host     : 'mysql-jimg.alwaysdata.net',
-  user     : 'jimg_jdr',
-  password : 'Jdr123456,',
-  database : 'jimg_jdr'
-});
 bot.login(CONFIG.botKey);
 
 bot.on('ready', function () {
@@ -33,7 +28,7 @@ bot.on('messageReactionAdd', (reaction, user) => {
               member.roles.add(role).catch(err = console.error);
               member.roles.add(role2).catch(err = console.error);
               member.roles.remove(role3).catch(err = console.error);
-              //connection.query('INSERT INTO players (discord_id,class_id,race_id,pv,dg,inv) VALUES ('+member.id+', '+getIDFromRoleID("classes", member.roles.get[1])+', '+getIDFromRoleID("races", member.roles.get[2])+', "1", "1", "1")');
+              connection.query('INSERT INTO players (discord_id,pv,dg,inv) VALUES ('+member.id+', "1", "1", "1")');
             });
     }
   }
@@ -104,30 +99,64 @@ bot.on('message', async message => {
     const attachment = new Discord.MessageAttachment(canvas.toBuffer(), 'dice.png');
     return message.reply(attachment);
   }
-  if(command === 'join') {
-      const canvas = Canvas.createCanvas(900, 1157);
-      const ctx = canvas.getContext('2d');
-      const background = await Canvas.loadImage('./images/fond_carte.png');
-      ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
+  if(command === 'card') {
+    message.delete();
+    const canvas = Canvas.createCanvas(900, 1157);
+    const ctx = canvas.getContext('2d');
+    const background = await Canvas.loadImage('./images/fond_carte.png');
+    ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
 
-      ctx.strokeStyle = '#74037b';
-      ctx.strokeRect(0, 0, canvas.width, canvas.height);
+    ctx.strokeStyle = '#74037b';
+    ctx.strokeRect(0, 0, canvas.width, canvas.height);
 
-      // Assign the decided font to the canvas
-      ctx.font = '60px sans-serif';
-      ctx.fillStyle = '#ffffff';
-      ctx.fillText(message.member.displayName, canvas.width / 2, canvas.height / 1.7);
-      ctx.beginPath();
-      ctx.arc(125, 125, 100, 0, Math.PI * 2, true);
-      ctx.closePath();
-      ctx.clip();
+    // Assign the decided font to the canvas
+    ctx.font = '40px sans-serif';
+    ctx.fillStyle = '#ff0000';
+    ctx.fillText(message.member.displayName, canvas.width / 2, canvas.height / 1.7);
+    ctx.beginPath();
+    ctx.arc(125, 125, 100, 0, Math.PI * 2, true);
+    ctx.closePath();
+    ctx.clip();
 
-      const logo = await Canvas.loadImage('./images/logo.png');
-      ctx.drawImage(logo, 25, 25, 200, 200);
+    const logo = await Canvas.loadImage('./images/logo.png');
+    ctx.drawImage(logo, 25, 25, 200, 200);
 
-      const attachment = new Discord.MessageAttachment(canvas.toBuffer(), 'welcome-image.png');
+    const attachment = new Discord.MessageAttachment(canvas.toBuffer(), 'welcome-image.png');
 
-      message.channel.send(attachment);
+    message.channel.send(attachment);
+	}
+  if(command === 'fight') {
+    message.delete();
+    connection.query('SELECT * FROM monsters ORDER BY RAND() LIMIT 1', function (error, results, fields) {
+      if (error) throw error;
+        connection.query('SELECT on_combat FROM players WHERE discord_id="'+message.author.id+'"', function (error2, results2, fields2) {
+          if (error2) throw error2;
+            if(results2[0].on_combat != 1){
+              var monster = results[0];
+              message.channel.send('<@!'+message.author.id+'> Début de combat super pourri contre '+monster.nom+'.');
+              connection.query('UPDATE players SET on_combat="1" WHERE discord_id="'+message.author.id+'"');
+            }else{
+              message.channel.send('<@!'+message.author.id+'> Impossible, vous êtes déjà en combat.');
+            }
+        });
+    });
+	}
+  if(command === 'hit') {
+    message.delete();
+    connection.query('SELECT on_combat FROM players WHERE discord_id="'+message.author.id+'"', function (error, results, fields) {
+      if (error) throw error;
+        if(results[0].on_combat == 1){
+          nb = getRandomInteger(0, 4);
+          if(nb == 1){
+            message.channel.send('<@!'+message.author.id+'> Bravo, l\'adversaire est mort.');
+            connection.query('UPDATE players SET on_combat="0" WHERE discord_id="'+message.author.id+'"');
+          }else{
+            message.channel.send('<@!'+message.author.id+'> Raté, vous n\'avez pas touché l\'adversaire.');
+          }
+        }else{
+          message.channel.send('<@!'+message.author.id+'> Impossible, vous n\'êtes pas en combat.');
+        }
+      });
 	}
 });
 function getRandomInteger(min, max) {

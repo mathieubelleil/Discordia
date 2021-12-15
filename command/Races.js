@@ -1,13 +1,6 @@
 const Discord = require('discord.js');
 const Command = require('./command');
-
-var mysql = require('mysql');
-var connection = mysql.createConnection({
-  host     : 'mysql-jimg.alwaysdata.net',
-  user     : 'jimg_jdr',
-  password : 'Jdr123456,',
-  database : 'jimg_jdr'
-});
+const {connection} = require('../config')
 
 module.exports = class Races extends Command {
     static match (client){
@@ -22,12 +15,12 @@ module.exports = class Races extends Command {
                 if(results[i].enable == 1){
                     var emoji_homme = client.emojis.cache.find(emoji => emoji.name == results[i].react+"_Homme");
                     var emoji_femme = client.emojis.cache.find(emoji => emoji.name == results[i].react+"_Femme");
-                    
+
                     const embed = new Discord.MessageEmbed()
                         .setColor(results[i].color)
                         .setDescription(`${emoji_femme}`+" "+`${emoji_homme}`+" - **"+results[i].nom+"** ("+results[i].pv+"PV - "+results[i].dg+"DG) - "+results[i].description+"\n\n"+results[i].capacite+"\n\n\n");
                     channel.send({embed});
-                    
+
                 }
             };
             channel.send("Choix de la race ?").then(async msg => {
