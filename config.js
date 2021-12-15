@@ -1,3 +1,5 @@
+const Discord = require('discord.js');
+
 const mysql = require('mysql');
 const connection = mysql.createConnection({
   host     : process.env.DB_HOST,
@@ -6,6 +8,13 @@ const connection = mysql.createConnection({
   database : process.env.DB_NAME
 });
 
+
+const bot = new Discord.Client();
+
+const charCreationChannel = "920652588381241364"
+
 module.exports = {
-  connection: connection
+  connection: connection,
+  bot: bot,
+  charCreationChannel : charCreationChannel
 }
