@@ -1,5 +1,6 @@
 const Discord = require('discord.js');
 const Command = require('./command');
+const {connection} = require('../config')
 
 module.exports = class Class extends Command {
     static match (client){

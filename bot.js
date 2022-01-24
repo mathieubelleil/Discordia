@@ -6,6 +6,7 @@ var CONFIG = require('./other/config.json');
 const Canvas = require('canvas');
 const bot = new Discord.Client();
 const prefix = "!";
+const {connection} = require('./config.js')
 
 const RaceChoiceChannelID= "656118230359867392"
 const ClassChoiceChannelID = "656118120540536853"
