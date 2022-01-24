@@ -7,6 +7,9 @@ const Canvas = require('canvas');
 const bot = new Discord.Client();
 const prefix = "!";
 
+const RaceChoiceChannelID= "656118230359867392"
+const ClassChoiceChannelID = "656118120540536853"
+
 var mysql = require('mysql');
 var connection = mysql.createConnection({
   host     : process.env.DB_HOST,
@@ -17,7 +20,7 @@ var connection = mysql.createConnection({
 bot.login(CONFIG.botKey);
 
 bot.on('ready', function () {
-  console.log("Je suis connecté ma gueule !");
+  console.log("Je suis connecté !");
   Classes.parse(bot);
   Races.parse(bot);
 })
@@ -27,9 +30,13 @@ bot.on('messageReactionAdd', (reaction, user) => {
     if(user != bot.user){
         connection.query('SELECT * FROM classes WHERE react="'+reaction.emoji.name.replace("_Femme", "").replace("_Homme", "")+'"', function (error, results, fields) {
             if (error) throw error;
+              //admin
               var role = reaction.message.guild.roles.cache.find(role => role.id === results[0].roleid);
+              //joueur
               var role2 = reaction.message.guild.roles.cache.find(role => role.id === "676354733430145024");
+              //choix de la classe
               var role3 = reaction.message.guild.roles.cache.find(role => role.id === "676393968598122517");
+              //get user
               var member = reaction.message.guild.members.cache.find(member => member.id === user.id);
               member.roles.add(role).catch(err = console.error);
               member.roles.add(role2).catch(err = console.error);
@@ -139,7 +146,7 @@ bot.on('message', async message => {
           if (error2) throw error2;
             if(results2[0].on_combat != 1){
               var monster = results[0];
-              message.channel.send('<@!'+message.author.id+'> Début de combat super pourri contre '+monster.nom+'.');
+              message.channel.send('<@!'+message.author.id+'> Début de combat contre '+monster.nom+'.');
               connection.query('UPDATE players SET on_combat="1" WHERE discord_id="'+message.author.id+'"');
             }else{
               message.channel.send('<@!'+message.author.id+'> Impossible, vous êtes déjà en combat.');
