@@ -16,6 +16,10 @@ const bot = new Client({ intents: [Intents.FLAGS.GUILDS] });
 
 const charCreationChannel = "920652588381241364"
 
+const bot = new Discord.Client();
+
+const charCreationChannel = "920652588381241364"
+
 module.exports = {
   connection: connection,
   bot: bot,
