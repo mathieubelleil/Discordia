@@ -121,3 +121,5 @@ function getIDFromRoleID(table, roleid) {
       return results[0].id;
     });
 }
+
+module.exports = {bot}
