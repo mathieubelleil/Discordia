@@ -45,7 +45,7 @@ module.exports = class CharCreation extends Command {
 
 // PLAYER CHOOSE A RACE
       bot.on('messageReactionAdd', (reaction, user1) => {
-        if(user === user1 && member.roles.cache.find(role => role.id === "676393968598122517")){
+        if(user === user1 ){ 
             connection.query('SELECT * FROM races WHERE react="'+reaction.emoji.name.replace("_Femme", "").replace("_Homme", "")+'"', function (error, results, fields) {
                 if (error) throw error;
                   var role = reaction.message.guild.roles.cache.find(role => role.id === results[0].roleid);
@@ -90,7 +90,7 @@ module.exports = class CharCreation extends Command {
                   });
                 });
         //PLAYER CHOOSE A CLASS
-        } if(user === user1 ){
+        if(user === user1 && member.roles.cache.find(role => role.id === "676393968598122517")){} 
             connection.query('SELECT * FROM classes WHERE react="'+reaction.emoji.name.replace("_Femme", "").replace("_Homme", "")+'"', function (error, results, fields) {
                 if (error) throw error;
                   var role = reaction.message.guild.roles.cache.find(role => role.id === results[0].roleid);
