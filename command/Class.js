@@ -1,10 +1,10 @@
 const Discord = require('discord.js');
 const Command = require('./command');
-const {connection} = require('../config')
+const {connection, charCreationChannel} = require('../config')
 
 module.exports = class Class extends Command {
     static match (client){
-        const channel = client.channels.cache.get('656118120540536853');
+        const channel = client.channels.cache.get(charCreationChannel);
         channel.messages.fetch()
                .then(function(list){
                 channel.bulkDelete(list);

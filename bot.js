@@ -1,74 +1,19 @@
 require('dotenv').config();
-const Discord = require('discord.js');
 const Classes = require('./command/Class.js');
 const Races = require('./command/Races.js');
-var CONFIG = require('./other/config.json');
+const CharCreation = require('./command/CharCreation.js')
 const Canvas = require('canvas');
-const bot = new Discord.Client();
 const prefix = "!";
-const {connection} = require('./config.js')
+const {connection, charCreationChannel, bot} = require('./config.js')
 
-bot.login(CONFIG.botKey);
+bot.login(process.env.BOTKEY);
 
 bot.on('ready', function () {
   console.log("Je suis connecté !");
-  Classes.parse(bot);
-  Races.parse(bot);
 })
 
-bot.on('messageReactionAdd', (reaction, user) => {
-  if(reaction.message.channel.id == "656118120540536853"){
-    if(user != bot.user){
-        connection.query('SELECT * FROM classes WHERE react="'+reaction.emoji.name.replace("_Femme", "").replace("_Homme", "")+'"', function (error, results, fields) {
-            if (error) throw error;
-              var role = reaction.message.guild.roles.cache.find(role => role.id === results[0].roleid);
-              var role2 = reaction.message.guild.roles.cache.find(role => role.id === "676354733430145024");
-              var role3 = reaction.message.guild.roles.cache.find(role => role.id === "676393968598122517");
-              var member = reaction.message.guild.members.cache.find(member => member.id === user.id);
-              member.roles.add(role).catch(err = console.error);
-              member.roles.add(role2).catch(err = console.error);
-              member.roles.remove(role3).catch(err = console.error);
-              connection.query('INSERT INTO players (discord_id,pv,dg,inv) VALUES ('+member.id+', "1", "1", "1")');
-            });
-    }
-  }
-  if(reaction.message.channel.id == "656118230359867392"){
-    if(user != bot.user){
-        connection.query('SELECT * FROM races WHERE react="'+reaction.emoji.name.replace("_Femme", "").replace("_Homme", "")+'"', function (error, results, fields) {
-            if (error) throw error;
-              var role = reaction.message.guild.roles.cache.find(role => role.id === results[0].roleid);
-              var role2 = reaction.message.guild.roles.cache.find(role => role.id === "676393968598122517");
-              var member = reaction.message.guild.members.cache.find(member => member.id === user.id);
-              member.roles.add(role).catch(err = console.error);
-              member.roles.add(role2).catch(err = console.error);
-              var roleToRemove = reaction.message.guild.roles.cache.find(role => role.id === "676354733430145024");
-              member.roles.remove(roleToRemove).catch(err = console.error);
-            });
-    }
-  }
-})
-bot.on('messageReactionRemove', (reaction, user) => {
-  if(reaction.message.channel.id == "656118120540536853"){
-    if(user != bot.user){
-        connection.query('SELECT * FROM classes WHERE react="'+reaction.emoji.name.replace("_Femme", "").replace("_Homme", "")+'"', function (error, results, fields) {
-            if (error) throw error;
-                var role = reaction.message.guild.roles.cache.find(role => role.id === results[0].roleid);
-                var member = reaction.message.guild.members.cache.find(member => member.id === user.id);
-                member.roles.remove(role).catch(err = console.error);
-            });
-    }
-  }
-  if(reaction.message.channel.id == "656118230359867392"){
-    if(user != bot.user){
-        connection.query('SELECT * FROM races WHERE react="'+reaction.emoji.name.replace("_Femme", "").replace("_Homme", "")+'"', function (error, results, fields) {
-            if (error) throw error;
-                var role = reaction.message.guild.roles.cache.find(role => role.id === results[0].roleid);
-                var member = reaction.message.guild.members.cache.find(member => member.id === user.id);
-                member.roles.remove(role).catch(err = console.error);
-            });
-    }
-  }
-});
+
+
 
 bot.on('message', async message => {
   const args = message.content.slice(prefix.length).trim().split(' ');
@@ -98,6 +43,12 @@ bot.on('message', async message => {
     }
     const attachment = new Discord.MessageAttachment(canvas.toBuffer(), 'dice.png');
     return message.reply(attachment);
+  }
+  if(command === 'creation'){
+    user = message.author
+    member = message.guild.members.cache.find(member => member.id === user.id);
+    member.roles.add(role => role.id === "676393968598122517").catch(error = console.error);
+    CharCreation.parse(bot);
   }
   if(command === 'card') {
     message.delete();
