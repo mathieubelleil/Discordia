@@ -5,7 +5,9 @@ module.exports = {
     .setName('clear')
     .setDescription('clear all messages'),
   async execute(client, interaction) {
-    interaction.channel.bulkDelete(99)
-    .catch(console.error);
+    const Channel = interaction.channel;
+    const Messages = Channel.messages.fetch();
+
+    await Channel.bulkDelete(100, true);
   }
 }
