@@ -1,3 +1,4 @@
+//Connection to the database
 const { DB_HOST, DB_NAME, DB_USER, DB_PASSWORD } = require('./config.json');
 const mysql = require('mysql');
 
