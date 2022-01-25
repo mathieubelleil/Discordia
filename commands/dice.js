@@ -6,7 +6,7 @@ module.exports = {
   data: new SlashCommandBuilder()
     .setName('dice')
     .setDescription('roll a 6 faced dice'),
-  async execute(interaction) {
+  async execute(client, interaction) {
       const nb = getRandomInteger(1, 6+1);
       var canvas = Canvas.createCanvas(50, 50);
       var ctx = canvas.getContext("2d");

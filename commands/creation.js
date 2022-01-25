@@ -1,13 +1,15 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { connection } = require('../db_connection.js');
-const { Client, Intents, Collection, MessageEmbed, MessageAttachment } = require('discord.js');
-const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
+const { Client, Intents, Collection, MessageEmbed, MessageAttachment, TextChannel } = require('discord.js');
+// const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
+const { token } = require('../config.json');
 
 module.exports = {
   data: new SlashCommandBuilder()
     .setName('creation')
     .setDescription('create a character'),
-  async execute(interaction) {
+  async execute(client, interaction) {
+    const channel = await client.channels.cache.get('920652588381241364');
     connection.query('SELECT * FROM races ORDER BY nom', function (error, results, fields) {
       if (error) throw error;
           for(var i = 0; i < results.length;i++){
@@ -18,12 +20,11 @@ module.exports = {
                   const embed = new MessageEmbed()
                       .setColor(results[i].color)
                       .setDescription(`${emoji_femme}`+" "+`${emoji_homme}`+" - **"+results[i].nom+"** ("+results[i].pv+"PV - "+results[i].dg+"DG) - "+results[i].description+"\n\n"+results[i].capacite+"\n\n\n");
-                  console.log(client.channels.cache.get("920652588381241364"))
-                  client.channels.cache.get("920652588381241364").send({ embeds: [embed] });
+                  channel.send({ embeds: [embed] });
 
               }
           };
-          client.channels.cache.get("920652588381241364").send("Choix de la race ?").then(async msg => {
+          channel.send("Choix de la race ?").then(async msg => {
               connection.query('SELECT * FROM races ORDER BY nom', function (error, results, fields) {
               if (error) throw error;
                   for(var i = 0; i < results.length;i++){
