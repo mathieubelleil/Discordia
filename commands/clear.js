@@ -6,7 +6,8 @@ module.exports = {
     .setDescription('clear all messages'),
   async execute(client, interaction) {
     const Channel = interaction.channel;
-    const Messages = Channel.messages.fetch();
+    //const Messages = Channel.messages.fetch();
+    //à quoi sert Messages ? 
 
     await Channel.bulkDelete(100, true);
   }

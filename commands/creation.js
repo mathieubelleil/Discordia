@@ -1,15 +1,16 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { connection } = require('../db_connection.js');
 const { Client, Intents, Collection, MessageEmbed, MessageAttachment, TextChannel } = require('discord.js');
-// const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
 const { token } = require('../config.json');
+const {creation_perso} = require('../channels.json');
 
 module.exports = {
   data: new SlashCommandBuilder()
     .setName('creation')
     .setDescription('create a character'),
   async execute(client, interaction) {
-    const channel = await client.channels.cache.get('920652588381241364');
+    const user = interaction.user.id
+    const channel = await client.channels.cache.get(creation_perso);
     connection.query('SELECT * FROM races ORDER BY nom', function (error, results, fields) {
       if (error) throw error;
           for(var i = 0; i < results.length;i++){
@@ -35,7 +36,36 @@ module.exports = {
                           msg.react(emojireact_femme.id);
                       }
                   };
+
+                  // const filter = (user, interaction) => {
+                  //   return true
+                  //   // console.log(user)
+                  //   // console.log(interaction.user.id)
+                  //   // return user === interaction.user.id
+                  // };
+
+                  msg.react('👍').then(() => msg.react('👎'));
+
+                  const filter = (reaction, user) => {
+                  	return ['👍', '👎'].includes(reaction.emoji.name);
+                  };
+
+                  msg.awaitReactions({ filter, max: 1, time: 10000, errors: ['time'] })
+                  	.then(collected => {
+                      console.log('collected')
+                  		const reaction = collected.first();
+                  		if (reaction.emoji.name === '👍') {
+                  			msg.reply('Destroy the orcs!');
+                  		} else {
+                  			msg.reply('You are something else');
+                  		}
+                  	})
+                  	.catch(collected => {
+                      console.log(collected)
+                  		msg.reply('Please choose a race');
+                  	});
               });
+
           });
       });
   }

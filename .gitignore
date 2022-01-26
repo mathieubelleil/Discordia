@@ -2,3 +2,5 @@ other/
 node_modules/
 .env
 config.json
+config_test.json
+channels_test.json
