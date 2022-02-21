@@ -1,6 +1,6 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { connection } = require('../db_connection.js');
-const { Client, Intents, Collection, MessageEmbed, MessageAttachment, TextChannel } = require('discord.js');
+const { Client, Intents, Collection, MessageEmbed, MessageAttachment, TextChannel, MessageButton, MessageActionRow } = require('discord.js');
 const { token } = require('../config.json');
 const {creation_perso} = require('../channels.json');
 
@@ -13,6 +13,8 @@ module.exports = {
     const channel = await client.channels.cache.get(creation_perso);
     connection.query('SELECT * FROM races ORDER BY nom', function (error, results, fields) {
       if (error) throw error;
+          let embeds = new Array();
+          let buttons = new Array();
           for(var i = 0; i < results.length;i++){
               if(results[i].enable == 1){
                   var emoji_homme = client.emojis.cache.find(emoji => emoji.name == results[i].react+"_Homme");
@@ -21,51 +23,62 @@ module.exports = {
                   const embed = new MessageEmbed()
                       .setColor(results[i].color)
                       .setDescription(`${emoji_femme}`+" "+`${emoji_homme}`+" - **"+results[i].nom+"** ("+results[i].pv+"PV - "+results[i].dg+"DG) - "+results[i].description+"\n\n"+results[i].capacite+"\n\n\n");
-                  channel.send({ embeds: [embed] });
-
+                  embeds.push(embed);
+                  const buttonHomme = new MessageButton()
+                  .setCustomId(results[i].nom+"_Homme")
+                  .setLabel("")
+                  .setStyle('PRIMARY')
+                  .setEmoji(emoji_homme.id);
+                  const buttonFemme = new MessageButton()
+                  .setCustomId(results[i].nom+"_Femme")
+                  .setLabel("")
+                  .setStyle('PRIMARY')
+                  .setEmoji(emoji_femme.id);
+                  buttons.push(buttonHomme);
+                  buttons.push(buttonFemme);
               }
           };
-          channel.send("Choix de la race ?").then(async msg => {
-              connection.query('SELECT * FROM races ORDER BY nom', function (error, results, fields) {
-              if (error) throw error;
-                  for(var i = 0; i < results.length;i++){
-                      if(results[i].enable == 1){
-                          var emojireact_homme = client.emojis.cache.find(emoji => emoji.name == results[i].react+"_Homme");
-                          msg.react(emojireact_homme.id);
-                          var emojireact_femme = client.emojis.cache.find(emoji => emoji.name == results[i].react+"_Femme");
-                          msg.react(emojireact_femme.id);
-                      }
-                  };
-
-                  // const filter = (user, interaction) => {
-                  //   return true
-                  //   // console.log(user)
-                  //   // console.log(interaction.user.id)
-                  //   // return user === interaction.user.id
-                  // };
-
-                  msg.react('👍').then(() => msg.react('👎'));
-
-                  const filter = (reaction, user) => {
-                  	return ['👍', '👎'].includes(reaction.emoji.name);
-                  };
-
-                  msg.awaitReactions({ filter, max: 1, time: 10000, errors: ['time'] })
-                  	.then(collected => {
-                      console.log('collected')
-                  		const reaction = collected.first();
-                  		if (reaction.emoji.name === '👍') {
-                  			msg.reply('Destroy the orcs!');
-                  		} else {
-                  			msg.reply('You are something else');
-                  		}
-                  	})
-                  	.catch(collected => {
-                      console.log(collected)
-                  		msg.reply('Please choose a race');
-                  	});
-              });
-
+          const row = new MessageActionRow().addComponents(buttons);
+          interaction.reply({ content: 'Bienvenue dans la création du personnage, dans un premier temps, faites un choix de race parmi cette liste.', ephemeral: true, embeds: embeds, components: [row] }).then(async msg => {
+            client.on('interactionCreate', interactionButton => {
+              if (interactionButton.isButton()){
+                const buttonId = interactionButton.customId;
+                var id = buttonId.split("_");
+                connection.query('SELECT * FROM classes ORDER BY nom', function (error2, results2, fields2) {
+                  if (error2) throw error2;
+                      let embeds2 = new Array();
+                      let buttons2 = new Array();
+                      for(var i = 0; i < results2.length;i++){
+                          if(results2[i].enable == 1){
+                              var emoji = client.emojis.cache.find(emoji => emoji.name == results2[i].react);
+            
+                              const embed = new MessageEmbed()
+                                  .setColor(results2[i].color)
+                                  .setDescription(`${emoji}`+" - **"+results2[i].nom+"** ("+results2[i].pv+"PV - "+results2[i].dg+"DG) - "+results2[i].description+"\n\n"+results2[i].pouvoir+"\n\n\n");
+                              embeds2.push(embed);
+                              const button = new MessageButton()
+                              .setCustomId(results2[i].nom)
+                              .setLabel("")
+                              .setStyle('PRIMARY')
+                              .setEmoji(emoji.id);
+                              buttons2.push(button);
+                          }
+                      };
+                      const row2 = new MessageActionRow().addComponents(buttons2);
+                      interaction.editReply({ content: 'Tu as choisi '+id[0]+' '+id[1]+' ! \nMaintenant choisi ta classe :', ephemeral: true, embeds: embeds2, components: [row2] }).then(async msg => {
+                        client.on('interactionCreate', interactionButton => {
+                          if (interactionButton.isButton()){
+                            return;
+                          }else{
+                            return;
+                          } 
+                        });
+                      });
+                  });
+              }else{
+                return;
+              } 
+            });
           });
       });
   }

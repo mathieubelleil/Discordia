@@ -1,9 +1,12 @@
+const {creation_perso} = require('../channels.json');
+
 module.exports = {
-	name: 'messageReactionAdd',
+	name: 'clickButton',
 	on: true,
-	async execute(reaction,user) {
-        if (!(reaction.message.author.id === user.id)){
-		    console.log('@' + user.username + ' add reaction');
-        }
+	async execute(client, reaction, user) {
+        client.on('clickButton', async button => {
+		    console.log(button.channelId);
+		    button.reply("Cancelled");
+		})
 	},
 };
