@@ -39,47 +39,45 @@ module.exports = {
               }
           };
           const row = new MessageActionRow().addComponents(buttons);
-          interaction.reply({ content: 'Bienvenue dans la création du personnage, dans un premier temps, faites un choix de race parmi cette liste.', ephemeral: true, embeds: embeds, components: [row] }).then(async msg => {
-            client.on('interactionCreate', interactionButton => {
+          interaction.reply({ content: 'Bienvenue dans la création du personnage, dans un premier temps, fais un choix de race parmi cette liste :', ephemeral: true, embeds: embeds, components: [row] }).then(async msg => {
+            var step = 1;
+            await client.on('interactionCreate', interactionButton => {
               if (interactionButton.isButton()){
                 const buttonId = interactionButton.customId;
                 var id = buttonId.split("_");
-                connection.query('SELECT * FROM classes ORDER BY nom', function (error2, results2, fields2) {
-                  if (error2) throw error2;
-                      let embeds2 = new Array();
-                      let buttons2 = new Array();
-                      for(var i = 0; i < results2.length;i++){
-                          if(results2[i].enable == 1){
-                              var emoji = client.emojis.cache.find(emoji => emoji.name == results2[i].react);
-            
-                              const embed = new MessageEmbed()
-                                  .setColor(results2[i].color)
-                                  .setDescription(`${emoji}`+" - **"+results2[i].nom+"** ("+results2[i].pv+"PV - "+results2[i].dg+"DG) - "+results2[i].description+"\n\n"+results2[i].pouvoir+"\n\n\n");
-                              embeds2.push(embed);
-                              const button = new MessageButton()
-                              .setCustomId(results2[i].nom)
-                              .setLabel("")
-                              .setStyle('PRIMARY')
-                              .setEmoji(emoji.id);
-                              buttons2.push(button);
-                          }
-                      };
-                      const row2 = new MessageActionRow().addComponents(buttons2);
-                      interaction.editReply({ content: 'Tu as choisi '+id[0]+' '+id[1]+' ! \nMaintenant choisi ta classe :', ephemeral: true, embeds: embeds2, components: [row2] }).then(async msg => {
-                        client.on('interactionCreate', interactionButton => {
-                          if (interactionButton.isButton()){
-                            return;
-                          }else{
-                            return;
-                          } 
+                if (step === 1) {
+                  connection.query('SELECT * FROM classes ORDER BY nom', function (error2, results2, fields2) {
+                    if (error2) throw error2;
+                        let embeds2 = new Array();
+                        let buttons2 = new Array();
+                        for(var i = 0; i < results2.length;i++){
+                            if(results2[i].enable == 1){
+                                var emoji = client.emojis.cache.find(emoji => emoji.name == results2[i].react);
+
+                                const embed = new MessageEmbed()
+                                    .setColor(results2[i].color)
+                                    .setDescription(`${emoji}`+" - **"+results2[i].nom+"** ("+results2[i].pv+"PV - "+results2[i].dg+"DG) - "+results2[i].description+"\n\n"+results2[i].pouvoir+"\n\n\n");
+                                embeds2.push(embed);
+                                const button = new MessageButton()
+                                .setCustomId(results2[i].nom)
+                                .setLabel("")
+                                .setStyle('PRIMARY')
+                                .setEmoji(emoji.id);
+                                buttons2.push(button);
+                            }
+                        };
+                        const row2 = new MessageActionRow().addComponents(buttons2);
+                        interaction.editReply({ content: 'Tu as choisi '+id[0]+' '+id[1]+' ! \nMaintenant, choisis ta classe :', ephemeral: true, embeds: embeds2, components: [row2] })
+                      });
+                      step++;
+                    } else if (step === 2) {
+                      interaction.editReply({ content: 'Tu as choisi '+id[0]+' ! \nBravo le veau !', ephemeral: true, embeds: [], components: [] });
+                    }
+                  }else{
+                    console.log('error, you should not see this great error message')
+                      }
                         });
                       });
                   });
-              }else{
-                return;
-              } 
-            });
-          });
-      });
   }
 }
