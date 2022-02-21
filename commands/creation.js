@@ -1,7 +1,7 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { connection } = require('../db_connection.js');
 const { Client, Intents, Collection, MessageEmbed, MessageAttachment, TextChannel, MessageButton, MessageActionRow } = require('discord.js');
-const { token } = require('../config.json');
+const { token, guildId } = require('../config.json');
 const {creation_perso} = require('../channels.json');
 
 module.exports = {
@@ -11,6 +11,7 @@ module.exports = {
   async execute(client, interaction) {
     const user = interaction.user.id
     const channel = await client.channels.cache.get(creation_perso);
+    const guild = await client.guilds.cache.get(guildId);
     connection.query('SELECT * FROM races ORDER BY nom', function (error, results, fields) {
       if (error) throw error;
           let embeds = new Array();
@@ -68,10 +69,18 @@ module.exports = {
                         };
                         const row2 = new MessageActionRow().addComponents(buttons2);
                         interaction.editReply({ content: 'Tu as choisi '+id[0]+' '+id[1]+' ! \nMaintenant, choisis ta classe :', ephemeral: true, embeds: embeds2, components: [row2] })
+
                       });
                       step++;
                     } else if (step === 2) {
                       interaction.editReply({ content: 'Tu as choisi '+id[0]+' ! \nBravo le veau !', ephemeral: true, embeds: [], components: [] });
+
+                    }
+                    let member = guild.members.cache.get(user)
+                    for(i in id){
+
+                      var role= guild.roles.cache.find(role => role.name === id[i]);
+                      member.roles.add(role)
                     }
                   }else{
                     console.log('error, you should not see this great error message')
