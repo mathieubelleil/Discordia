@@ -76,7 +76,7 @@ module.exports = {
                       interaction.editReply({ content: 'Tu as choisi '+id[0]+' ! \nBravo le veau !', ephemeral: true, embeds: [], components: [] });
 
                     }
-                    let member = guild.members.cache.get(user)
+                    const member = guild.members.cache.get(user)
                     for(i in id){
 
                       var role= guild.roles.cache.find(role => role.name === id[i]);
