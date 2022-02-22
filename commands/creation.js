@@ -1,7 +1,8 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { connection } = require('../db_connection.js');
 const { Client, Intents, Collection, MessageEmbed, MessageAttachment, TextChannel, MessageButton, MessageActionRow } = require('discord.js');
-const { token } = require('../config.json');
+const { token } = require('../configTST.json');
+const { guildId } = require('../configTST.json')
 const {creation_perso} = require('../channels.json');
 
 module.exports = {
@@ -9,7 +10,8 @@ module.exports = {
     .setName('creation')
     .setDescription('create a character'),
   async execute(client, interaction) {
-    const user = interaction.user.id
+    const user_id = interaction.user.id
+    const guild = client.guilds.cache.get(guildId);
     const channel = await client.channels.cache.get(creation_perso);
     connection.query('SELECT * FROM races ORDER BY nom', function (error, results, fields) {
       if (error) throw error;
@@ -62,8 +64,10 @@ module.exports = {
                               .setStyle('PRIMARY')
                               .setEmoji(emoji.id);
                               buttons2.push(button);
+                             
                           }
                       };
+                      
                       const row2 = new MessageActionRow().addComponents(buttons2);
                       interaction.editReply({ content: 'Tu as choisi '+id[0]+' '+id[1]+' ! \nMaintenant choisi ta classe :', ephemeral: true, embeds: embeds2, components: [row2] }).then(async msg => {
                         client.on('interactionCreate', interactionButton => {
@@ -74,7 +78,19 @@ module.exports = {
                           } 
                         });
                       });
+                      
                   });
+
+                  let member = guild.members.cache.get(user_id)
+                  for(i in id){
+                    
+                    var role= guild.roles.cache.find(role => role.name === id[i]);
+                    member.roles.add(role)
+                  }
+                
+                  
+                  
+
               }else{
                 return;
               } 
