@@ -1,6 +1,6 @@
 const fs = require('fs');
 const { Client, Intents, Collection, MessageEmbed, MessageAttachment } = require('discord.js');
-const { connection } = require('./db_connection.js');
+const { connection } = require('./database/db_connection.js');
 const { token } = require('./config.json');
 
 const myIntents = new Intents();
