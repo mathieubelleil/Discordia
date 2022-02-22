@@ -1,8 +1,7 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { connection } = require('../db_connection.js');
 const { Client, Intents, Collection, MessageEmbed, MessageAttachment, TextChannel, MessageButton, MessageActionRow } = require('discord.js');
-const { token } = require('../configTST.json');
-const { guildId } = require('../configTST.json')
+const { token, guildId } = require('../config.json');
 const {creation_perso} = require('../channels.json');
 
 module.exports = {
@@ -13,6 +12,7 @@ module.exports = {
     const user_id = interaction.user.id
     const guild = client.guilds.cache.get(guildId);
     const channel = await client.channels.cache.get(creation_perso);
+    const guild = await client.guilds.cache.get(guildId);
     connection.query('SELECT * FROM races ORDER BY nom', function (error, results, fields) {
       if (error) throw error;
           let embeds = new Array();
@@ -41,61 +41,54 @@ module.exports = {
               }
           };
           const row = new MessageActionRow().addComponents(buttons);
-          interaction.reply({ content: 'Bienvenue dans la création du personnage, dans un premier temps, faites un choix de race parmi cette liste.', ephemeral: true, embeds: embeds, components: [row] }).then(async msg => {
-            client.on('interactionCreate', interactionButton => {
+          interaction.reply({ content: 'Bienvenue dans la création du personnage, dans un premier temps, fais un choix de race parmi cette liste :', ephemeral: true, embeds: embeds, components: [row] }).then(async msg => {
+            var step = 1;
+            await client.on('interactionCreate', interactionButton => {
               if (interactionButton.isButton()){
                 const buttonId = interactionButton.customId;
                 var id = buttonId.split("_");
-                connection.query('SELECT * FROM classes ORDER BY nom', function (error2, results2, fields2) {
-                  if (error2) throw error2;
-                      let embeds2 = new Array();
-                      let buttons2 = new Array();
-                      for(var i = 0; i < results2.length;i++){
-                          if(results2[i].enable == 1){
-                              var emoji = client.emojis.cache.find(emoji => emoji.name == results2[i].react);
-            
-                              const embed = new MessageEmbed()
-                                  .setColor(results2[i].color)
-                                  .setDescription(`${emoji}`+" - **"+results2[i].nom+"** ("+results2[i].pv+"PV - "+results2[i].dg+"DG) - "+results2[i].description+"\n\n"+results2[i].pouvoir+"\n\n\n");
-                              embeds2.push(embed);
-                              const button = new MessageButton()
-                              .setCustomId(results2[i].nom)
-                              .setLabel("")
-                              .setStyle('PRIMARY')
-                              .setEmoji(emoji.id);
-                              buttons2.push(button);
-                             
-                          }
-                      };
-                      
-                      const row2 = new MessageActionRow().addComponents(buttons2);
-                      interaction.editReply({ content: 'Tu as choisi '+id[0]+' '+id[1]+' ! \nMaintenant choisi ta classe :', ephemeral: true, embeds: embeds2, components: [row2] }).then(async msg => {
-                        client.on('interactionCreate', interactionButton => {
-                          if (interactionButton.isButton()){
-                            return;
-                          }else{
-                            return;
-                          } 
+                if (step === 1) {
+                  connection.query('SELECT * FROM classes ORDER BY nom', function (error2, results2, fields2) {
+                    if (error2) throw error2;
+                        let embeds2 = new Array();
+                        let buttons2 = new Array();
+                        for(var i = 0; i < results2.length;i++){
+                            if(results2[i].enable == 1){
+                                var emoji = client.emojis.cache.find(emoji => emoji.name == results2[i].react);
+
+                                const embed = new MessageEmbed()
+                                    .setColor(results2[i].color)
+                                    .setDescription(`${emoji}`+" - **"+results2[i].nom+"** ("+results2[i].pv+"PV - "+results2[i].dg+"DG) - "+results2[i].description+"\n\n"+results2[i].pouvoir+"\n\n\n");
+                                embeds2.push(embed);
+                                const button = new MessageButton()
+                                .setCustomId(results2[i].nom)
+                                .setLabel("")
+                                .setStyle('PRIMARY')
+                                .setEmoji(emoji.id);
+                                buttons2.push(button);
+                            }
+                        };
+                        const row2 = new MessageActionRow().addComponents(buttons2);
+                        interaction.editReply({ content: 'Tu as choisi '+id[0]+' '+id[1]+' ! \nMaintenant, choisis ta classe :', ephemeral: true, embeds: embeds2, components: [row2] })
+
+                      });
+                      step++;
+                    } else if (step === 2) {
+                      interaction.editReply({ content: 'Tu as choisi '+id[0]+' ! \nBravo le veau !', ephemeral: true, embeds: [], components: [] });
+
+                    }
+                    let member = guild.members.cache.get(user)
+                    for(i in id){
+
+                      var role= guild.roles.cache.find(role => role.name === id[i]);
+                      member.roles.add(role)
+                    }
+                  }else{
+                    console.log('error, you should not see this great error message')
+                      }
                         });
                       });
                       
                   });
-
-                  let member = guild.members.cache.get(user_id)
-                  for(i in id){
-                    
-                    var role= guild.roles.cache.find(role => role.name === id[i]);
-                    member.roles.add(role)
-                  }
-                
-                  
-                  
-
-              }else{
-                return;
-              } 
-            });
-          });
-      });
   }
 }
