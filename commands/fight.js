@@ -11,29 +11,29 @@ function getRandomInteger(min, max) {
 
 function getEmbeds(player, monster){
   const monsterEmbed = new MessageEmbed()
-    .setDescription(monster.nom+' : '+monster.pv+' PV');
+    .setDescription(monster.name+' : '+monster.health+' PV');
   const playerEmbed = new MessageEmbed()
-    .setDescription(player.discord_id+' : '+player.pv+' PV');
+    .setDescription(player.discord_id+' : '+player.health+' PV');
   const embed = []
   embed.push(monsterEmbed, playerEmbed);
   return embed;
 }
 
-function dodgeTest(esq) {
+function dodgeTest(dodge) {
   const dice = getRandomInteger(0, 100);
-  if (esq > dice){
+  if (dodge > dice){
     return true
   } else {return false;}
 }
 
 function playerAttack(player, monster) {
   let content = ''
-  if (dodgeTest(monster.esq)) {
+  if (dodgeTest(monster.dodge)) {
     content = 'L\'adversaire évite le coup ! '
   } else {
-    if ((monster.attaque + monster.dg) > player.arm) {
-      let lostHP = (player.attaque + player.dg) - monster.arm;
-      monster.pv -= lostHP;
+    if ((monster.attack + monster.damage) > player.armor) {
+      let lostHP = (player.attack + player.damage) - monster.armor;
+      monster.health -= lostHP;
       content = 'Pan ! Dans les dents ! Ton adversaire perd ' + lostHP + 'PV ! '
     } else {
       content = 'Le coup donné est trop faible pour infliger la moindre égratignure. '
@@ -44,12 +44,12 @@ function playerAttack(player, monster) {
 
 function monsterSimpleAttack(monster, player) {
   let content = ''
-  if (dodgeTest(player.esq)) {
+  if (dodgeTest(player.dodge)) {
     content = 'L\'adversaire ne parvient pas à te toucher !'
   } else {
-    if ((monster.attaque + monster.dg) > player.arm) {
-      let lostHP = (monster.attaque + monster.dg) - player.arm;
-      player.pv -= lostHP;
+    if ((monster.attack + monster.damage) > player.armor) {
+      let lostHP = (monster.attack + monster.damage) - player.armor;
+      player.health -= lostHP;
       content = 'Tu reçois un coup te faisant perdre '+ lostHP + 'PV ! '
     } else {
       content = 'Le coup reçu est trop faible pour recevoir la moindre égratignure. '
@@ -71,7 +71,7 @@ module.exports = {
     } else {
       let encounter = encounterRole.name.split('VS')
       encounter = encounter[1]
-      connection.query('SELECT * FROM monsters WHERE nom = \'' + encounter + '\'', function (error, results, fields) {
+      connection.query('SELECT * FROM monsters WHERE name = \'' + encounter + '\'', function (error, results, fields) {
         if (error) throw error;
         const monster = results[0]
         connection.query('SELECT * FROM players WHERE discord_id = \'' + member + '\'', (error, results, fields) => {
@@ -92,12 +92,13 @@ module.exports = {
           let buttons = []
           buttons.push(buttonAttack)
           let components = new MessageActionRow().addComponents(buttons);
-          interaction.reply({ content: player.discord_id +  ', vous faites face à ' + monster.nom, ephemeral: true, embeds: getEmbeds(player, monster), components: [components] }).then(async msg => {
+          interaction.reply({ content: player.discord_id +  ', vous faites face à ' + monster.name, ephemeral: true, embeds: getEmbeds(player, monster), components: [components] }).then(async msg => {
             let round = 1;
             let fightResult;
             let playerResult;
             let monsterResult;
-            await client.on('interactionCreate', interactionButton => {
+            await client.on('interactionCreate', async interactionButton => {
+              await interactionButton.deferUpdate();
               if(interactionButton.isButton()){
                 const action = interactionButton.customId;
                 if (action === "Attack") {
@@ -113,10 +114,10 @@ module.exports = {
                 monsterResult = monsterSimpleAttack(monster, player);
 
                 //Check if opponent or player is dead :
-                if (player.pv < 1) {
+                if (player.health < 1) {
                   fightResult = 'Tu as péri, ton nom sera probablement oublié, mais tu peux toujours recréer un personnage pour espérer entrer dans la légende.'
                   components = new MessageActionRow().addComponents(buttonFinish)
-                } else if (monster.pv < 1) {
+                } else if (monster.health < 1) {
                   fightResult = 'Bien joué, tu as triomphé et peux dépouiller ton adversaire en toute quiétude !'
                   components = new MessageActionRow().addComponents(buttonFinish)
                 } else {

@@ -15,11 +15,14 @@ module.exports = {
     let races;
     let classes;
     let gender;
-    let pv = 0;
-    let dg = 0;
+    let health = 0;
+    let damage = 0;
+    let attack = 0;
+    let dodge = 0;
+    let armor = 0;
     let identifiers = [];
-    
-    connection.query('SELECT * FROM races ORDER BY nom', function (error, results, fields) {
+    // connection.query('SELECT * FROM players WHERE discord_id = \'' + user + '\'')
+    connection.query('SELECT * FROM races ORDER BY name', function (error, results, fields) {
       if (error) throw error;
           let embeds = new Array();
           let buttons = new Array();
@@ -31,15 +34,16 @@ module.exports = {
 
                   const embed = new MessageEmbed()
                       .setColor(results[i].color)
-                      .setDescription(`${emoji_femme}`+" "+`${emoji_homme}`+" - **"+results[i].nom+"** ("+results[i].pv+"PV - "+results[i].dg+"DG) - "+results[i].description+"\n\n"+results[i].capacite+"\n\n\n");
+                      .setDescription(`${emoji_femme}`+" "+`${emoji_homme}`+" - **"+results[i].name+"** ("+results[i].health+"PV - "+results[i].damage+" dégâts) - "+results[i].description+ "\n\n *"
+                       + results[i].ability1_name+"* : "+results[i].ability1_desc +"\n *" + results[i].ability2_name+ "* : " + results[i].ability2_desc +"\n\n\n");
                   embeds.push(embed);
                   const buttonHomme = new MessageButton()
-                  .setCustomId(results[i].nom+"_Homme")
+                  .setCustomId(results[i].name+"_Homme")
                   .setLabel("")
                   .setStyle('PRIMARY')
                   .setEmoji(emoji_homme.id);
                   const buttonFemme = new MessageButton()
-                  .setCustomId(results[i].nom+"_Femme")
+                  .setCustomId(results[i].name+"_Femme")
                   .setLabel("")
                   .setStyle('PRIMARY')
                   .setEmoji(emoji_femme.id);
@@ -48,15 +52,16 @@ module.exports = {
               }
           };
           const row = new MessageActionRow().addComponents(buttons);
-          interaction.reply({ content: 'Bienvenue dans la création du personnage, dans un premier temps, fais un choix de race parmi cette liste :', ephemeral: true, embeds: embeds, components: [row] }).then(async msg => {
+          interaction.reply({ content: 'Bienvenue dans la création du personnage, dans un premier temps, fais un choix de race parmi la liste :', ephemeral: true, embeds: embeds, components: [row] }).then(async msg => {
             let step = 1;
             let member = guild.members.cache.get(user)
-            await client.on('interactionCreate', interactionButton => {
+            await client.on('interactionCreate', async interactionButton => {
+              await interactionButton.deferUpdate();
               if (interactionButton.isButton()){
                 const buttonId = interactionButton.customId;
                 let id = buttonId.split("_");
                 if (step === 1) {
-                  connection.query('SELECT * FROM classes ORDER BY nom', function (error2, results2, fields2) {
+                  connection.query('SELECT * FROM classes ORDER BY name', function (error2, results2, fields2) {
                     if (error2) throw error2;
                     classes = results2;
                         let embeds2 = new Array();
@@ -67,47 +72,48 @@ module.exports = {
 
                                 const embed = new MessageEmbed()
                                     .setColor(results2[i].color)
-                                    .setDescription(`${emoji}`+" - **"+results2[i].nom+"** ("+results2[i].pv+"PV - "+results2[i].dg+"DG) - "+results2[i].description+"\n\n"+results2[i].pouvoir+"\n\n\n");
+                                    .setDescription(`${emoji}`+" - **"+results2[i].name+"** ("+results2[i].health+"PV - "+results2[i].damage+"dégâts) - "+results2[i].description+"\n\n *"+ results2[i].ability1_name+"* : "+results2[i].ability1_desc +"\n *" + results2[i].ability2_name+ "* : " + results2[i].ability2_desc +"\n\n\n");
                                 embeds2.push(embed);
                                 const button = new MessageButton()
-                                .setCustomId(results2[i].nom)
+                                .setCustomId(results2[i].name)
                                 .setLabel("")
                                 .setStyle('PRIMARY')
                                 .setEmoji(emoji.id);
-                                
+
                                 buttons2.push(button);
                             }
                         };
                         for(i in races){
-                          
-                          if(races[i].nom === id[0]){
-                            pv += Number(races[i].pv)
-                            dg += Number(races[i].dg)
+
+                          if(races[i].name === id[0]){
+                            health += Number(races[i].health)
+                            attack += Number(races[i].attack)
+                            damage += Number(races[i].damage)
+                            dodge += Number(races[i].dodge)
+                            armor += Number(races[i].armor)
                             identifiers.push(races[i].id)
-                            
+
                           }
                         }
-                        
-                        
-                      
+
+
+
                         for(i in id){
                           //add roles to user
                           var role= guild.roles.cache.find(role => role.name === id[i]);
                           member.roles.add(role)
                         }
-                        
+
                         gender = id[1]
                         const row2 = new MessageActionRow().addComponents(buttons2);
                         interaction.editReply({ content: 'Tu as choisi '+id[0]+' '+id[1]+' ! \nMaintenant, choisis ta classe :', ephemeral: true, embeds: embeds2, components: [row2] })
-                        
-                    
+
+
                       });
                       step++;
                     } else if (step === 2) {
-                      interaction.editReply({ content: 'Tu as choisi '+id[0]+' ! \nBravo le veau !', ephemeral: true, embeds: [], components: [] });
-                      
                       let emoji = client.emojis.cache.find(emoji => emoji.name == 'check');
-                      
+
                       let buttons3 = new Array();
                       const button = new MessageButton()
                             .setCustomId('validate')
@@ -116,42 +122,41 @@ module.exports = {
                             .setEmoji(emoji.id);
                       buttons3.push(button)
                       const row3 = new MessageActionRow().addComponents(buttons3);
-                      interaction.editReply({ content: 'Validez votre choix :', ephemeral: true, embeds: [], components: [row3] })
+                      interaction.editReply({ content: 'Tu as choisi la classe '+id[0]+' ! Valider ?', ephemeral: true, embeds: [], components: [row3] })
                       for(i in classes){
-                          
-                        if(classes[i].nom === id[0]){
-                          pv+= Number(classes[i].pv)
-                          dg += Number(classes[i].dg)
+
+                        if(classes[i].name === id[0]){
+                          health += Number(classes[i].health)
+                          attack += Number(classes[i].attack)
+                          damage += Number(classes[i].damage)
+                          dodge += Number(classes[i].dodge)
                           identifiers.push(classes[i].id)
                         }
                       }
-                
-                      
-                      
+
+
+
                       for(i in id){
                         //add roles to user
                         let role= guild.roles.cache.find(role => role.name === id[i]);
                         member.roles.add(role)
                       }
-                      
+
                       step++;
-                      
-                      
+
+
                     } else if (step === 3) {
                       //inserPlayerintodb
-                      connection.query(`INSERT INTO players(discord_id,pv,pv_max,dg,gender,classes_id,races_id)
-                                      VALUES(?,?,?,?,?,?,?)`,[user,pv,pv,dg,gender,identifiers[1],identifiers[0]]
+                      connection.query(`INSERT INTO players(discord_id,health,maxHealth,damage,attack,dodge,armor,gender,classes_id,races_id)
+                                      VALUES(?,?,?,?,?,?,?,?,?,?)`,[user,health,health,damage,attack,dodge,armor,gender,identifiers[1],identifiers[0]]
                                     )
                       step++;
+                      // TODO : delete button, thank you message, instructions ?
+                      interaction.editReply({ content: 'Votre personnage est enregistré, prêt pour l\'aventure !', ephemeral: true, embeds: [], components: []})
                     }
-                
-                  }else{
-                    console.log('error, you should not see this great error message')
-                      }
-                        });
-                      });
-                      
-                  });
-  
+                  }
+                });
+              });
+            });
   }
 }
