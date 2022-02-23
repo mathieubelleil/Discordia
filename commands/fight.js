@@ -19,11 +19,43 @@ function getEmbeds(player, monster){
   return embed;
 }
 
-function dodgeDice(esq) {
+function dodgeTest(esq) {
   const dice = getRandomInteger(0, 100);
   if (esq > dice){
     return true
   } else {return false;}
+}
+
+function playerAttack(player, monster) {
+  let content = ''
+  if (dodgeTest(monster.esq)) {
+    content = 'L\'adversaire évite le coup ! '
+  } else {
+    if ((monster.attaque + monster.dg) > player.arm) {
+      let lostHP = (player.attaque + player.dg) - monster.arm;
+      monster.pv -= lostHP;
+      content = 'Pan ! Dans les dents ! Ton adversaire perd ' + lostHP + 'PV ! '
+    } else {
+      content = 'Le coup donné est trop faible pour infliger la moindre égratignure. '
+    }
+  }
+  return content
+}
+
+function monsterSimpleAttack(monster, player) {
+  let content = ''
+  if (dodgeTest(player.esq)) {
+    content = 'L\'adversaire ne parvient pas à te toucher !'
+  } else {
+    if ((monster.attaque + monster.dg) > player.arm) {
+      let lostHP = (monster.attaque + monster.dg) - player.arm;
+      player.pv -= lostHP;
+      content = 'Tu reçois un coup te faisant perdre '+ lostHP + 'PV ! '
+    } else {
+      content = 'Le coup reçu est trop faible pour recevoir la moindre égratignure. '
+    }
+  }
+  return content
 }
 
 module.exports = {
@@ -45,8 +77,8 @@ module.exports = {
         connection.query('SELECT * FROM players WHERE discord_id = \'' + member + '\'', (error, results, fields) => {
           if (error) throw error;
           const player = results[0]
-          var embed = getEmbeds(player, monster)
-          var emojiAttack = client.emojis.cache.find(emoji => emoji.name == 'attack')
+          let embed = getEmbeds(player, monster)
+          let emojiAttack = client.emojis.cache.find(emoji => emoji.name == 'attack')
           const buttonAttack = new MessageButton()
             .setCustomId('Attack')
             .setLabel("Attaquer")
@@ -57,53 +89,41 @@ module.exports = {
             .setLabel("Finish")
             .setStyle('PRIMARY')
             .setEmoji(emojiAttack.id)
-          var buttons = []
+          let buttons = []
           buttons.push(buttonAttack)
-          var components = new MessageActionRow().addComponents(buttons);
+          let components = new MessageActionRow().addComponents(buttons);
           interaction.reply({ content: player.discord_id +  ', vous faites face à ' + monster.nom, ephemeral: true, embeds: getEmbeds(player, monster), components: [components] }).then(async msg => {
-            var round = 1;
+            let round = 1;
+            let fightResult;
+            let playerResult;
+            let monsterResult;
             await client.on('interactionCreate', interactionButton => {
               if(interactionButton.isButton()){
                 const action = interactionButton.customId;
                 if (action === "Attack") {
-                  const messageContent = []
-                  var monsterEsq = getRandomInteger(0, 100);
-                  if (dodgeDice(monster.esq)) {
-                    messageContent['playerResult'] = 'L\'adversaire évite le coup ! '
-                  } else {
-                    if ((monster.attaque + monster.dg) > player.arm) {
-                      var lostHP = (player.attaque + player.dg) - monster.arm;
-                      monster.pv -= lostHP;
-                      messageContent['playerResult'] = 'Pan ! Dans les dents ! Ton adversaire perd ' + lostHP + 'PV ! '
-                    } else {
-                      messageContent['monsterResult'] = 'Le coup donné est trop faible pour infliger la moindre égratignure. '
-                    }
-                  }
-                  if (dodgeDice(player.esq)) {
-                    messageContent['monsterResult'] = 'L\'adversaire ne parvient pas à te toucher !'
-                  } else {
-                    if ((monster.attaque + monster.dg) > player.arm) {
-                      var lostHP = (monster.attaque + monster.dg) - player.arm;
-                      player.pv -= lostHP;
-                      messageContent['monsterResult'] = 'Tu reçois un coup te faisant perdre '+ lostHP + 'PV ! '
-                    } else {
-                      messageContent['monsterResult'] = 'Le coup reçu est trop faible pour recevoir la moindre égratignure. '
-                    }
-                  }
-                  if (player.pv < 500) {
-                    messageContent['fightResult'] = 'Tu as péri, ton nom sera probablement oublié, mais tu peux toujours recréer un personnage pour espérer entrer dans la légende.'
-                    components = new MessageActionRow().addComponents(buttonFinish)
-                  } else if (monster.pv < 1) {
-                    messageContent['fightResult'] = 'Bien joué, tu as triomphé et peux dépouiller ton adversaire en toute quiétude !'
-                    components = new MessageActionRow().addComponents(buttonFinish)
-                  } else {
-                    messageContent['fightResult'] = 'Le combat peut continuer...'
-                  }
-                  interaction.editReply({ content: messageContent['playerResult'] + messageContent['monsterResult'] + messageContent['fightResult'], ephemeral: true, embeds: getEmbeds(player, monster), components: [components]})
+                  playerResult = playerAttack(player, monster);
+                } else if (action === 'Finish') {
+
                 } else {
                   console.log("Normally impossible to see this console log");
                   //Add other actions to do (drink potions, cast spells, shoot arrows...)
                 }
+
+                //Monster action :
+                monsterResult = monsterSimpleAttack(monster, player);
+
+                //Check if opponent or player is dead :
+                if (player.pv < 1) {
+                  fightResult = 'Tu as péri, ton nom sera probablement oublié, mais tu peux toujours recréer un personnage pour espérer entrer dans la légende.'
+                  components = new MessageActionRow().addComponents(buttonFinish)
+                } else if (monster.pv < 1) {
+                  fightResult = 'Bien joué, tu as triomphé et peux dépouiller ton adversaire en toute quiétude !'
+                  components = new MessageActionRow().addComponents(buttonFinish)
+                } else {
+                  fightResult = 'Le combat peut continuer...'
+                }
+
+                interaction.editReply({ content: playerResult + monsterResult + fightResult, ephemeral: true, embeds: getEmbeds(player, monster), components: [components]})
               }
             })
           });
