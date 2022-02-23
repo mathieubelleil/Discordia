@@ -10,7 +10,7 @@ module.exports = {
     .setDescription('create a character'),
   async execute(client, interaction) {
     const user = interaction.user.id
-    const guild = client.guilds.cache.get(guildId);
+    const guild = await client.guilds.cache.get(guildId);
     const channel = await client.channels.cache.get(creation_perso);
     let races;
     let classes;
@@ -24,10 +24,10 @@ module.exports = {
           let embeds = new Array();
           let buttons = new Array();
           races = results;
-          for(var i = 0; i < results.length;i++){
+          for(let i = 0; i < results.length;i++){
               if(results[i].enable == 1){
-                  var emoji_homme = client.emojis.cache.find(emoji => emoji.name == results[i].react+"_Homme");
-                  var emoji_femme = client.emojis.cache.find(emoji => emoji.name == results[i].react+"_Femme");
+                  let emoji_homme = client.emojis.cache.find(emoji => emoji.name == results[i].react+"_Homme");
+                  let emoji_femme = client.emojis.cache.find(emoji => emoji.name == results[i].react+"_Femme");
 
                   const embed = new MessageEmbed()
                       .setColor(results[i].color)
@@ -49,21 +49,21 @@ module.exports = {
           };
           const row = new MessageActionRow().addComponents(buttons);
           interaction.reply({ content: 'Bienvenue dans la création du personnage, dans un premier temps, fais un choix de race parmi cette liste :', ephemeral: true, embeds: embeds, components: [row] }).then(async msg => {
-            var step = 1;
+            let step = 1;
             let member = guild.members.cache.get(user)
             await client.on('interactionCreate', interactionButton => {
               if (interactionButton.isButton()){
                 const buttonId = interactionButton.customId;
-                var id = buttonId.split("_");
+                let id = buttonId.split("_");
                 if (step === 1) {
                   connection.query('SELECT * FROM classes ORDER BY nom', function (error2, results2, fields2) {
                     if (error2) throw error2;
                     classes = results2;
                         let embeds2 = new Array();
                         let buttons2 = new Array();
-                        for(var i = 0; i < results2.length;i++){
+                        for(let i = 0; i < results2.length;i++){
                             if(results2[i].enable == 1){
-                                var emoji = client.emojis.cache.find(emoji => emoji.name == results2[i].react);
+                                let emoji = client.emojis.cache.find(emoji => emoji.name == results2[i].react);
 
                                 const embed = new MessageEmbed()
                                     .setColor(results2[i].color)
@@ -106,7 +106,7 @@ module.exports = {
                     } else if (step === 2) {
                       interaction.editReply({ content: 'Tu as choisi '+id[0]+' ! \nBravo le veau !', ephemeral: true, embeds: [], components: [] });
                       
-                      var emoji = client.emojis.cache.find(emoji => emoji.name == 'check');
+                      let emoji = client.emojis.cache.find(emoji => emoji.name == 'check');
                       
                       let buttons3 = new Array();
                       const button = new MessageButton()
@@ -130,7 +130,7 @@ module.exports = {
                       
                       for(i in id){
                         //add roles to user
-                        var role= guild.roles.cache.find(role => role.name === id[i]);
+                        let role= guild.roles.cache.find(role => role.name === id[i]);
                         member.roles.add(role)
                       }
                       

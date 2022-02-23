@@ -8,8 +8,8 @@ module.exports = {
     .setDescription('roll a 6 faced dice'),
   async execute(client, interaction) {
       const nb = getRandomInteger(1, 6+1);
-      var canvas = Canvas.createCanvas(50, 50);
-      var ctx = canvas.getContext("2d");
+      let canvas = Canvas.createCanvas(50, 50);
+      let ctx = canvas.getContext("2d");
       ctx.font = "30px Comic Sans MS";
       ctx.fillStyle = "#FFFFFF";
       ctx.fillRect(0,0,50,50);
