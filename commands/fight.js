@@ -64,7 +64,7 @@ module.exports = {
     .setDescription('fight an encountered enemy'),
   async execute(client, interaction) {
     const guild = await client.guilds.cache.get(guildId);
-    const member = await guild.members.cache.get(interaction.user.id)
+    const member = interaction.user.id;
     const encounterRole = member.roles.cache.find(role => role.name.startsWith('VS'))
     if (!encounterRole) {
         interaction.reply({ content: 'Il n\'y a rien à combattre !', ephemeral: true, embeds: [], components: [] });;
@@ -97,7 +97,8 @@ module.exports = {
             let fightResult;
             let playerResult;
             let monsterResult;
-            await client.on('interactionCreate', interactionButton => {
+            await client.on('interactionCreate', async interactionButton => {
+              await interactionButton.deferUpdate();
               if(interactionButton.isButton()){
                 const action = interactionButton.customId;
                 if (action === "Attack") {
