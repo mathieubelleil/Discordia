@@ -1,13 +1,12 @@
 const fs = require('fs');
 const { Client, Intents, Collection, MessageEmbed, MessageAttachment } = require('discord.js');
 const { connection } = require('./db_connection.js');
-const { token } = require('./config.json');
+const { token } = require('./config.json')[process.env.NODE_ENV || 'production'];
 
 const myIntents = new Intents();
 myIntents.add(Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGE_REACTIONS, Intents.FLAGS.GUILD_MESSAGES);
 
 const client = new Client({ intents: myIntents ,partials: ["CHANNEL", "MESSAGE", "REACTION", "USER"] });
-
 
 client.login(token);
 
