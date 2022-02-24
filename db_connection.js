@@ -1,5 +1,9 @@
 //Connection to the database
+<<<<<<< HEAD
 const { DB_HOST, DB_NAME, DB_USER, DB_PASSWORD } = require('./config.json')[process.env.NODE_ENV || 'production'];
+=======
+const { DB_HOST, DB_NAME, DB_USER, DB_PASSWORD } = require('./config.json')[process.env.NODE_ENV || 'production'];;
+>>>>>>> update README + add development and production environment integration
 const mysql = require('mysql');
 
 
