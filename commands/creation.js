@@ -1,7 +1,11 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { connection } = require('../db_connection.js');
 const { Client, Intents, Collection, MessageEmbed, MessageAttachment, TextChannel, MessageButton, MessageActionRow } = require('discord.js');
+<<<<<<< HEAD
 const { guildId } = require('../config.json')[process.env.NODE_ENV || 'production'];
+=======
+const { guildId } = require('../config.json')[process.env.NODE_ENV || 'production'];;
+>>>>>>> update README + add development and production environment integration
 const {creation_perso} = require('../channels.json');
 
 module.exports = {
