@@ -1,12 +1,16 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { connection } = require('../db_connection.js');
 const { Client, Intents, Collection, MessageEmbed, MessageAttachment, TextChannel, MessageButton, MessageActionRow } = require('discord.js');
-<<<<<<< HEAD
 const { guildId } = require('../config.json')[process.env.NODE_ENV || 'production'];
-=======
-const { guildId } = require('../config.json')[process.env.NODE_ENV || 'production'];;
->>>>>>> update README + add development and production environment integration
 const {creation_perso} = require('../channels.json');
+
+function setUsername(member) {
+  if (member.nickname){
+    return member.nickname
+  }  else {
+    return member.user.username
+  }
+}
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -14,8 +18,8 @@ module.exports = {
     .setDescription('create a character'),
   async execute(client, interaction) {
     const user = interaction.user.id
-    const username = interaction.user.username
     const guild = await client.guilds.cache.get(guildId);
+    let username;
     let races;
     let classes;
     let gender;
@@ -108,8 +112,6 @@ module.exports = {
                             }
                           }
 
-
-
                           for(i in id){
                             //add roles to user
                             var role= guild.roles.cache.find(role => role.name === id[i]);
@@ -120,7 +122,6 @@ module.exports = {
                           const row2 = new MessageActionRow().addComponents(buttons2);
                           interaction.editReply({ content: 'Tu as choisi d\'incarner un '+chosenRaceName+' '+gender+' ! \nMaintenant, choisis ta classe :', ephemeral: true, embeds: embeds2, components: [row2] })
 
-
                         });
                         step++;
                       } else if (step === 2) {
@@ -129,7 +130,7 @@ module.exports = {
                         let buttons3 = new Array();
                         const button = new MessageButton()
                               .setCustomId('validate')
-                              .setLabel('')
+                              .setLabel('Valider')
                               .setStyle('PRIMARY')
                               .setEmoji(emoji.id);
                         buttons3.push(button)
@@ -147,7 +148,9 @@ module.exports = {
                           }
                         }
 
-                        interaction.editReply({ content: 'Tu as choisi la classe '+chosenClassName+' ! Valider ?', ephemeral: true, embeds: [], components: [row3] })
+                        username = setUsername(member);
+
+                        interaction.editReply({ content: 'Tu as choisi la classe '+chosenClassName+' ! Le nom de ton personnage sera le pseudo choisi sur le serveur (actuellement '+username+'), tu peux le modifier avant de valider (clique droit sur ton profil, modifier profil du serveur).', ephemeral: true, embeds: [], components: [row3] })
 
                         for(i in id){
                           //add roles to user
@@ -159,11 +162,12 @@ module.exports = {
 
 
                       } else if (step === 3) {
-                        
+                        username = setUsername(member);
+
                         connection.query(`INSERT INTO players(name, discord_id,health,maxHealth,damage,attack,dodge,armor,gender,classes_id,races_id)
                                         VALUES(?,?,?,?,?,?,?,?,?,?,?)`,[username,user,health,health,damage,attack,dodge,armor,gender,chosenClassId,chosenRaceId]
                                       )
-                        interaction.editReply({ content: 'Votre personnage est enregistré, bonne chance '+username+' !', ephemeral: true, embeds: [], components: []})
+                        interaction.editReply({ content: 'Ton personnage est enregistré, bonne chance '+username+' !', ephemeral: true, embeds: [], components: []})
                       }
                     }
                   });

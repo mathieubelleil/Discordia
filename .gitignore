@@ -1,5 +1,3 @@
 other/
 node_modules/
-.env
 config.json
-channels_test.json
