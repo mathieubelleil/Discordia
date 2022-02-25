@@ -1,5 +1,3 @@
-const {creation_perso} = require('../channels.json');
-
 module.exports = {
 	name: 'clickButton',
 	on: true,

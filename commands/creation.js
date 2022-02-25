@@ -1,8 +1,7 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { connection } = require('../db_connection.js');
-const { Client, Intents, Collection, MessageEmbed, MessageAttachment, TextChannel, MessageButton, MessageActionRow } = require('discord.js');
+const { MessageEmbed, MessageButton, MessageActionRow } = require('discord.js');
 const { guildId } = require('../config.json')[process.env.NODE_ENV || 'production'];
-const {creation_perso} = require('../channels.json');
 
 function setUsername(member) {
   if (member.nickname){
