@@ -1,9 +1,10 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
+const i18next = require('i18next');
 
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('clear')
-		.setDescription('clear all messages'),
+		.setDescription('Supprime les messages du channel'),
 	async execute(client, interaction) {
 		const Channel = interaction.channel;
 		//const Messages = Channel.messages.fetch();
