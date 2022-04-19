@@ -1,7 +1,7 @@
 module.exports = {
 	name: 'ready',
 	once: true,
-	execute(client) {
-		console.log('Discordia bot ready');
+	execute() {
+		console.log('Discordia bot ready')
 	},
-};
+}
