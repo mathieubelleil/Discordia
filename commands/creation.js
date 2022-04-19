@@ -15,7 +15,7 @@ function setUsername(member) {
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('creation')
-		.setDescription('create a character'),
+		.setDescription(i18next.t('commands.creation')),
 	async execute(client, interaction) {
 		const user = interaction.user.id
 		const guild = await client.guilds.cache.get(guildId);

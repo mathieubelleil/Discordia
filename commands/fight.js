@@ -56,7 +56,7 @@ function monsterSimpleAttack(monster, player) {
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('fight')
-		.setDescription('fight an encountered enemy'),
+		.setDescription(i18next.t('commands.fight')),
 	async execute(client, interaction) {
 		const guild = await client.guilds.cache.get(guildId);
 		const member = await guild.members.cache.get(interaction.user.id)

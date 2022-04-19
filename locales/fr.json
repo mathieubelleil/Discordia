@@ -1,10 +1,17 @@
 {
-  "start" : {
-    "error_no_character": ""
+  "begin" : {
+    "error_no_character": "Veuillez d'abord créer un personnage (action disponible avec /creation)"
   },
   "character": {
     "health": "PV",
     "damage": "dégâts"
+  },
+  "commands": {
+    "begin": "Démarrer l'aventure",
+    "clear": "Supprime les messages du channel discord",
+    "creation": "Créer un personnage",
+    "dice": "Lance un D6",
+    "fight": "Affronter un ennemi rencontré"
   },
   "creation": {
     "error_character_created": "Vous avez déjà créé un personnage !",
