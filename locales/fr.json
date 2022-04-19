@@ -1,0 +1,35 @@
+{
+  "start" : {
+    "error_no_character": ""
+  },
+  "character": {
+    "health": "PV",
+    "damage": "dégâts"
+  },
+  "creation": {
+    "error_character_created": "Vous avez déjà créé un personnage !",
+    "welcome": "Bienvenue dans la création du personnage, dans un premier temps, fais un choix de race parmi la liste :",
+    "race_choice": "Tu as choisi d'incarner un {{chosenRaceName}} {{gender}} ! \nMaintenant, choisis ta classe :",
+    "class_choice": "Tu as choisi la classe {{chosenClassName}} ! Le nom de ton personnage sera le pseudo choisi sur le serveur (actuellement {{username}}), tu peux le modifier avant de valider (clique droit sur ton profil, modifier profil du serveur).",
+    "register": "Ton personnage est enregistré, bonne chance {{username}} !"
+  },
+  "fight": {
+    "player_hit": "Pan ! Dans les dents ! Ton adversaire perd {{lostHP}}PV !",
+    "player_weak_hit": "Le coup donné est trop faible pour infliger la moindre égratignure.",
+    "player_dodge" : "L'adversaire ne parvient pas à te toucher !",
+    "enemy_hit": "Tu reçois un coup te faisant perdre {{lostHP}}PV !",
+    "enemy_dodge": "L'adversaire évite le coup !",
+    "enemy_weak_hit": "Le coup reçu est trop faible pour recevoir la moindre égratignure.",
+    "no_enemy": "Il n'y a rien à combattre !",
+    "encounter": "{{player}}, vous faites face à {{enemy}}",
+    "actions": {
+      "attack": "Attaquer",
+      "finish": "Terminer"
+    },
+    "result": {
+      "next": "Le combat peut continuer...",
+      "death": "Tu as péri, ton nom sera probablement oublié, mais tu peux toujours recréer un personnage pour espérer entrer dans la légende.",
+      "victory": "Bien joué, tu as triomphé et peux dépouiller ton adversaire en toute quiétude !"
+    }
+  }
+}

@@ -1,5 +1,6 @@
 {
 	"development" : {
+		"language": "", //Language of the bot. fr only is supported.
 		"clientId": "", //Application ID du bot Discord
 		"guildId": "", //ID du serveur Discord
 		"token": "", //Token du bot Discord
@@ -9,6 +10,7 @@
 		"DB_NAME": ""
 	},
 	"production" : {
+		"language": "", //Language of the bot. fr only is supported.
 		"clientId": "", //Application ID du bot Discord
 		"guildId": "", //ID du serveur Discord
 		"token": "", //Token du bot Discord

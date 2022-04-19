@@ -1,0 +1,19 @@
+{
+  "extends": "eslint:recommended",
+  "env": {
+    "node": true,
+    "es6": true
+  },
+  "parserOptions": {
+    "ecmaVersion": 2021
+  },
+  "rules": {
+    "indent": ["error", "tab"],
+    "no-empty-function": "error",
+    "no-lonely-if": "error",
+    "no-multi-spaces": "error",
+    "no-var": "error",
+    "prefer-const": "error",
+    "quotes": ["error", "single"]
+  }
+}
