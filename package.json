@@ -13,8 +13,8 @@
     "mysql": "^2.18.1"
   },
   "scripts": {
-    "dev": "set NODE_ENV = development && node deploy-commands.js && node bot.js",
-    "prod": "set NODE_ENV = production && node deploy-commands.js && node bot.js",
+    "dev": "set NODE_ENV=development&&node deploy-commands.js&&node bot.js",
+    "prod": "set NODE_ENV=production&&node deploy-commands.js&&node bot.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
