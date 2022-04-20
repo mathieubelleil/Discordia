@@ -4,10 +4,12 @@ const { MessageEmbed, MessageButton, MessageActionRow } = require('discord.js');
 const i18next = require('i18next');
 const { guildId } = require('../config.json')[process.env.NODE_ENV || 'production'];
 
+const desc = i18next.t('commands.begin')
+
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('begin')
-		.setDescription('fez'),
+		.setDescription(desc),
 	async execute(client, interaction) {
 		const user = interaction.user.id
 		const guild = await client.guilds.cache.get(guildId)

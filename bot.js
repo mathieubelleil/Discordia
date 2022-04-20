@@ -4,20 +4,6 @@ const { token, language } = require('./config.json')[process.env.NODE_ENV || 'pr
 const i18next = require('i18next');
 const translationFR = require('./locales/fr.json')
 
-i18next.init({
-	lng: language,
-	fallbackLng: 'fr',
-	debug: true,
-	resources: {
-		fr : {
-			translation: translationFR
-		}
-	}
-}, (err) => {
-	if (err) return console.error(err)
-	console.log('i18next ready')
-})
-
 const myIntents = new Intents();
 myIntents.add(Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGE_REACTIONS, Intents.FLAGS.GUILD_MESSAGES);
 
