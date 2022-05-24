@@ -1,11 +1,12 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const Canvas = require('canvas');
 const {MessageAttachment} = require('discord.js')
+const i18next = require('i18next');
 
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('dice')
-		.setDescription('roll a 6 faced dice'),
+		.setDescription('Lance un dé à 6 faces'),
 	async execute(client, interaction) {
 		const nb = getRandomInteger(1, 6+1);
 		const canvas = Canvas.createCanvas(50, 50);
