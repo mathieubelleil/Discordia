@@ -1,7 +1,11 @@
 {
   "begin" : {
     "error_no_character": "Veuillez d'abord créer un personnage (action disponible avec /creation)",
-    "start": "Né dans un village aux bordures de Bisvir [...] Vous décidez de partir le soir",
+    "continue": "Suivant",
+    "start_1": "Né dans un village aux bordures de Bisvir. Vous vivez une enfance insouciante à apprendre le peu que votre sage peut vous enseigner. Vers l'âge de 16 ans, vous vous prenez de passion pour le monde en dehors de votre quotidien. Votre armurier vous apprend les bases du combat et le maître chasseur vous apprend des mois durant à chasser et vous nourrir dans le bois voisin. Vous ne vous sentez toujours pas prêt à partir. ",
+    "start_2": "Un soir, alors que vous répétez inlassablement ce moulinet avec une lance que vous avez appris récemment, vous voyez à travers l'ombre de la forêt une souche bouger. Puis un craquement sourd alors qu'un tronc presque mort est arraché de la terre avec force. Vos yeux déjà en larmes ne fixent plus le tronc depuis déjà quelques secondes, mais plutôt la créature qui le tient comme une immense massue. Immense et la peau grise, de la mousse sur la moitié de son visage, des dents disproportionnées qu'on voit dépasser de son affreuse bouche. Vous connaissez bien ce genre de monstre, le sage vous a fait un cours dessus. Ils vivent souvent seuls dans les grottes et endroits loin de la lumière dont ils ont une peur bleue. La faim à dû faire sortir celui-ci de son antre. Vous savez que les villageois ne sont pas dans ses habitudes alimentaires. Malgré tout, il semble vous fixer en bavant à grosses gouttes. Il doit vous prendre pour une biche ou un sanglier qui sait ? Les Trolls sont connus pour être particulièrement stupides et celui-ci semble ne pas déroger à la règle. Il sort des bois pour avancer de plus en plus vite vers vous, bavant de plus en plus. Que faire ? Fuir ? Impossible, il vous rattraperait ! Faire le mort ? Non, il vous dévorerait quand même ! Plus le choix, vos yeux pleins de larmes ne vous permettent pas de voir plus que des taches floues, mais l'odeur nauséabonde presque insoutenable indique qu'il n'est plus très loin. Vous agrippez votre lance et vous souvenez de votre cours. Il faut frapper la gorge pour le ralentir suffisamment pour vous enfuir. Mais vous ne voyez plus rien, il faut essuyer vos larmes vite pour bien voir. Impossible de décrocher vos mains de la lance.",
+    "start_3": "Cette odeur... Vous fermez les yeux pour vous concentrer sur son pas lourd. Il est là vous le savez. Plus que quelques mètres. Un bruit sourd, un cri puis la terre qui tremble. Vous ouvrez péniblement les yeux et en séchant vos larmes apercevez la créature s'enfuir. À votre droite une jeune sirène équipée de la tête au pied d'une lourde armure vous regarde avec un sourire avec une immense masse semblant faite de lumière dans la main. Elle vous rassure et vous demande de rentrer. Vous rentrez avec précipitation compter ce qu'il s'est passé aux autres et qu'une aventurière vous as sauvé. Vous vous sentez prêt à devenir aussi fort qu'elle ! Ce soir, c'est décidé, vous partirez visiter ce grand monde.",
+    "start_4": "Voilà 3 jours que vous marchez pour atteindre Bolm (une étape qui vous semble essentielle pour s'équiper). Vous n'avez pour le moment que de maigres rations et aucune arme pour vous battre. Vous revoyez encore vos amis rire aux éclats en vous voyant quitter le village avec un grand sourire un simple baluchon à la main. Toutes ces pensées vous font trébucher sur un sanglier. Il se retourne probablement furieux.",
     "step": "Lorem Ipsum 1e étape"
   },
   "character": {
@@ -39,6 +43,7 @@
       "next": "Le combat peut continuer...",
       "death": "Tu as péri, ton nom sera probablement oublié, mais tu peux toujours recréer un personnage pour espérer entrer dans la légende.",
       "victory": "Bien joué, tu as triomphé et peux dépouiller ton adversaire en toute quiétude !"
-    }
+    },
+    "loot_draft": "Vous récupérez 25 PO et gagnez 15 XP."
   }
 }
