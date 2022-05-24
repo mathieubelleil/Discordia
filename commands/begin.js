@@ -18,12 +18,37 @@ module.exports = {
 			if(!results[0]) {
 				return interaction.reply({ content: i18next.t('begin.error_no_character'), ephemeral: true, embeds: [], components: [] })
 			}
-			interaction.reply({ content: i18next.t('begin.start'), ephemeral: true, embeds: [], components: [] }).then(async () => {
-				await questHandler.questQuery(questId).then(results => {
-					console.log(results)
+			const buttonContinue = new MessageButton()
+				.setCustomId('Continue')
+				.setLabel(i18next.t('begin.continue'))
+				.setStyle('PRIMARY')
+			const buttons = []
+			buttons.push(buttonContinue)
+			let step = 1
+			const components = new MessageActionRow().addComponents(buttons);
+			interaction.reply({ content: i18next.t('begin.start_1'), ephemeral: true, embeds: [], components: [components] }).then(async () => {
+				await client.on('interactionCreate', async interactionButton => {
+					await interactionButton.deferUpdate();
+					if(interactionButton.isButton()) {
+						const action = interactionButton.customId;
+						if (action === 'Continue') {
+							if (step < 5) {
+								step++
+								interaction.editReply({ content: i18next.t('begin.start_'+step), ephemeral: true, embeds: [], components: [components]})
+							} else {
+
+							}
+
+						}
+					}
 				})
-				const quest = new questHandler(questId)
-				console.log(quest)
+				//TODO : Gestion de la quête en BDD
+
+				// await questHandler.questQuery(questId).then(results => {
+				// 	console.log(results)
+				// })
+				// const quest = new questHandler(questId)
+				// console.log(quest)
 				// await quest.updateQuestProgress(user, 1)
 				// console.log(quest.getName())
 				// console.log(quest.getStepDesc(quest.step))

@@ -99,9 +99,9 @@ module.exports = {
 								if (action === 'Attack') {
 									playerResult = playerAttack(player, monster);
 								} else if (action === 'Finish') {
-									console.log('TODO')
+									//TODO : Créer une vraie action de loot à l'issue du combat
+									return interaction.editReply({ content: i18next.t('fight.loot_draft'), ephemeral: true, embeds: [], components: []})
 								} else {
-									console.log('Normally impossible to see this console log');
 									//TODO: Add other actions to do (drink potions, cast spells, shoot arrows...)
 								}
 
