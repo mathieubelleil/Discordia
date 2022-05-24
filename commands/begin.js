@@ -32,11 +32,9 @@ module.exports = {
 					if(interactionButton.isButton()) {
 						const action = interactionButton.customId;
 						if (action === 'Continue') {
+							step++
 							if (step < 5) {
-								step++
 								interaction.editReply({ content: i18next.t('begin.start_'+step), ephemeral: true, embeds: [], components: [components]})
-							} else {
-
 							}
 
 						}
